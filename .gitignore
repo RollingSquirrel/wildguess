@@ -2,3 +2,17 @@ pnpm-workspace.yaml
 .agents
 sqlite.db
 sqlite.db-*
+
+# Environments
+.env
+.env.*
+!.env.example
+
+# Docker Compose Overrides
+docker-compose.override.yml
+
+# SSL Certificates
+certs/
+*.pem
+*.crt
+*.key
