@@ -49,13 +49,19 @@
                         <button type="submit" [disabled]="topicForm.invalid" class="btn-sm">Set</button>
                     </form>
 
-                    <button (click)="reveal()" [disabled]="!allVoted()" class="btn-action"
+                    <button (click)="reveal()" class="btn-action relative overflow-hidden group"
                         [class.btn-action-ready]="allVoted()">
-                        @if (allVoted()) {
-                        ✨ Reveal Votes
-                        } @else {
-                        Reveal Votes (waiting...)
+                        @if (!allVoted() && votingProgressPercent() > 0) {
+                        <div class="absolute top-0 left-0 bottom-0 bg-primary opacity-20 transition-all duration-300 ease-out z-0"
+                            [style.width.%]="votingProgressPercent()"></div>
                         }
+                        <span class="relative z-10 block pointer-events-none">
+                            @if (allVoted()) {
+                            ✨ Reveal Votes
+                            } @else {
+                            Reveal Votes Early ({{ votedCount() }}/{{ members().length }})
+                            }
+                        </span>
                     </button>
                     }
 

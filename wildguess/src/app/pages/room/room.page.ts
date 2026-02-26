@@ -50,6 +50,14 @@ export class RoomPage implements OnInit, OnDestroy {
         const m = this.members();
         return m.length > 0 && m.every((member) => member.hasVoted);
     });
+    readonly votedCount = computed(() => {
+        return this.members().filter((member) => member.hasVoted).length;
+    });
+    readonly votingProgressPercent = computed(() => {
+        const total = this.members().length;
+        if (total === 0) return 0;
+        return (this.votedCount() / total) * 100;
+    });
 
     private pollSub?: Subscription;
     private roomId = '';

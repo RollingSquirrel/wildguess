@@ -24,6 +24,11 @@
 
 **Rationale**: The app state is simple and scoped per page. Room state is polled from the server (source of truth), so complex client-side state management would add unnecessary complexity.
 
+### Early Vote Reveal
+**Decision**: The host is permitted to reveal votes even if the room has not fully voted.
+
+**Rationale**: This guarantees that if a participant goes AFK or drops without closing their session, the host can proceed with the vote without locking up the entire room. A progress indicator is shown to the host to inform them of the vote completion status before revealing.
+
 ### Phase-Based Rendering
 **Decision**: The room page renders different views based on the room's `phase` signal (`voting` → `revealed` → `versus` → back to `voting`).
 
