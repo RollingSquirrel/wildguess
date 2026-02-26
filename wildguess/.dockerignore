@@ -1,0 +1,29 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies (rebuilt in image)
+node_modules
+
+# Build artifacts (rebuilt in image)
+dist
+out-tsc
+
+# Angular cache
+.angular
+
+# IDE / Editor
+.idea
+.vscode
+.editorconfig
+
+# Testing
+__screenshots__
+coverage
+
+# Misc
+.DS_Store
+Thumbs.db
+*.log
+.prettierrc
+.sass-cache

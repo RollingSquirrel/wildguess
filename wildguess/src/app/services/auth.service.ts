@@ -5,7 +5,7 @@ import { inject } from '@angular/core';
 import type { AuthResponse, MeResponse, User } from '../models/api.models';
 import { firstValueFrom } from 'rxjs';
 
-const API_BASE = '/api';
+const API_BASE = 'api';
 const TOKEN_KEY = 'wildguess_token';
 
 @Injectable({ providedIn: 'root' })

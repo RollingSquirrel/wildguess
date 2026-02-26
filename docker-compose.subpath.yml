@@ -1,0 +1,14 @@
+# An example override file to host Wildguess at a subpath (/wildguess/).
+# Both the client and nginx containers need to know about the subpath.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.subpath.yml up -d
+
+services:
+  client:
+    environment:
+      - BASE_URL=/wildguess/
+
+  nginx:
+    environment:
+      - BASE_URL=/wildguess/

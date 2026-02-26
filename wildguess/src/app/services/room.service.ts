@@ -4,7 +4,7 @@ import { Observable, interval, switchMap, startWith } from 'rxjs';
 import { AuthService } from './auth.service';
 import type { RoomSummary, RoomState, DiscoverRoom } from '../models/api.models';
 
-const API_BASE = '/api';
+const API_BASE = 'api';
 
 @Injectable({ providedIn: 'root' })
 export class RoomService {

@@ -10,11 +10,16 @@ import voteRoutes from './routes/votes.js';
 
 const app = new Hono();
 
-// CORS for Angular dev server
+// Configurable via environment
+const PORT = parseInt(process.env.PORT || '3000', 10);
+const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+
+// CORS configuration
+const corsOrigins = CORS_ORIGIN === '*' ? '*' : CORS_ORIGIN.split(',').map((o) => o.trim());
 app.use(
   '/api/*',
   cors({
-    origin: ['http://localhost:4200', 'http://localhost:4000'],
+    origin: corsOrigins as string[] | string,
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -86,7 +91,7 @@ initDb();
 serve(
   {
     fetch: app.fetch,
-    port: 3000,
+    port: PORT,
   },
   (info) => {
     console.log(`Server is running on http://localhost:${info.port}`);

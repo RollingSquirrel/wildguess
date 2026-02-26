@@ -1,0 +1,33 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies (rebuilt in image)
+node_modules
+
+# Build artifacts (rebuilt in image)
+dist
+
+# Database files
+sqlite.db
+sqlite.db-shm
+sqlite.db-wal
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# IDE / Editor
+.idea
+.vscode
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Drizzle migrations (generated, not needed at runtime)
+drizzle/

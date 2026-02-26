@@ -1,0 +1,43 @@
+services:
+  api:
+    build: ./wildguess-api
+    restart: unless-stopped
+    environment:
+      - PORT=3000
+      - DB_PATH=/data/sqlite.db
+      - CORS_ORIGIN=*
+    volumes:
+      - wildguess-data:/data
+
+  client:
+    build: ./wildguess
+    restart: unless-stopped
+    environment:
+      - BASE_URL=${BASE_URL:-/}
+
+  nginx:
+    build: ./nginx
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+      - "${HTTPS_PORT:-8443}:443"
+    environment:
+      - BASE_URL=${BASE_URL:-/}
+    depends_on:
+      - api
+      - client
+
+volumes:
+  wildguess-data:
+
+# ─── SSL Setup ──────────────────────────────────────────────────
+# To enable HTTPS, create a docker-compose.override.yml:
+#
+#   services:
+#     nginx:
+#       environment:
+#         - SSL_CERT=/etc/ssl/certs/wildguess.crt
+#         - SSL_KEY=/etc/ssl/private/wildguess.key
+#       volumes:
+#         - ./certs/fullchain.pem:/etc/ssl/certs/wildguess.crt:ro
+#         - ./certs/privkey.pem:/etc/ssl/private/wildguess.key:ro

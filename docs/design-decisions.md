@@ -53,4 +53,35 @@
 
 ## Deployment Architecture
 
-The app will run in a Docker stack: **Nginx → API → Client**. The Angular app is served as static files. Nginx proxies `/api/*` to the Hono backend. No Dockerfiles are created yet, but the architecture supports this topology without code changes.
+### Docker Stack
+**Decision**: Three-container Docker Compose stack: **Nginx (reverse proxy) → Client (Angular static) → API (Hono/Node.js)**.
+
+**Rationale**: Clean separation of concerns. Nginx handles TLS termination, gzip, security headers, and routing. The Angular app is pre-built into static files served by an internal Nginx instance. The API runs as a plain Node.js process. All containers use Alpine-based images for minimal size. The API runs as a non-root `node` user.
+
+### Environment Configuration
+| Variable | Container | Default | Description |
+|----------|-----------|---------|-------------|
+| `PORT` | api | `3000` | API listen port |
+| `DB_PATH` | api | `/data/sqlite.db` | SQLite database file path |
+| `CORS_ORIGIN` | api | `*` | Allowed origins (comma-separated or `*`) |
+| `BASE_URL` | client, nginx | `/` | Sub-path for hosting (e.g. `/wildguess/`) |
+| `SSL_CERT` | nginx | — | Path to SSL certificate inside container |
+| `SSL_KEY` | nginx | — | Path to SSL private key inside container |
+| `HTTP_PORT` | nginx (host) | `8080` | Host port mapped to Nginx HTTP |
+| `HTTPS_PORT` | nginx (host) | `8443` | Host port mapped to Nginx HTTPS |
+
+### SSL Termination
+**Decision**: Optional SSL at the Nginx reverse proxy layer. Default is HTTP-only. HTTPS is enabled by mounting cert/key files and setting `SSL_CERT`/`SSL_KEY` env vars on the Nginx container.
+
+**Rationale**: SSL is offloaded to the edge proxy so backend containers don't need certificates. The entrypoint selects between an HTTP-only and an HTTPS template at startup. When HTTPS is enabled, HTTP automatically redirects to HTTPS with HSTS headers.
+
+### Base URL Rewrite
+**Decision**: The Angular `<base href="/">` is rewritten at container startup via the client container's entrypoint script using the `BASE_URL` environment variable.
+
+**Rationale**: This allows the same Docker image to be deployed at any sub-path without rebuilding. The `sed` replacement happens once at startup, before Nginx serves the static files.
+
+### Data Persistence
+**Decision**: SQLite database persisted via a Docker named volume (`wildguess-data`) mounted at `/data` in the API container.
+
+**Rationale**: Named volumes survive container restarts and upgrades. The `DB_PATH` env var points the API to the volume-mounted path. WAL mode remains enabled for concurrent read performance during polling.
+
