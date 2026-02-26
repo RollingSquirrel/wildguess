@@ -5,6 +5,19 @@ Wildguess is a fullstack application for planning poker.
 It is meant to be used by small teams to estimate the effort required for tasks providing a great UI experience.
 Wildguess respects limitations of hosting behind reverse proxies and load balancers.
 
+## Configuration
+
+| Variable | Container | Default | Description |
+|----------|-----------|---------|-------------|
+| `PORT` | api | `3000` | API listen port |
+| `DB_PATH` | api | `/data/sqlite.db` | SQLite database file path |
+| `CORS_ORIGIN` | api | `*` | Allowed origins (comma-separated or `*`) |
+| `BASE_URL` | client, nginx | `/` | Sub-path for hosting (e.g. `/wildguess/`) |
+| `SSL_CERT` | nginx | — | Path to SSL certificate inside container |
+| `SSL_KEY` | nginx | — | Path to SSL private key inside container |
+| `HTTP_PORT` | nginx (host) | `8080` | Host port mapped to Nginx HTTP |
+| `HTTPS_PORT` | nginx (host) | `8443` | Host port mapped to Nginx HTTPS |
+
 ## Tech Stack
 
 - **Frontend**: Angular 21 - named wildguess
