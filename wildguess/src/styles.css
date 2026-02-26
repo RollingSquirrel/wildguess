@@ -1,3 +1,95 @@
-/* You can add global styles to this file, and also import other style files */
-
+/* Global styles for Wildguess - Dark Developer Theme */
 @import 'tailwindcss';
+
+@theme {
+  --color-bg-primary: #0a0e14;
+  --color-bg-secondary: #111820;
+  --color-bg-surface: #1a2332;
+  --color-bg-surface-hover: #222e3f;
+  --color-bg-card: #151d29;
+
+  --color-primary: #00e676;
+  --color-primary-dim: #00c863;
+  --color-primary-glow: rgba(0, 230, 118, 0.3);
+  --color-primary-subtle: rgba(0, 230, 118, 0.08);
+
+  --color-text-primary: #e8edf4;
+  --color-text-secondary: #8899aa;
+  --color-text-muted: #556677;
+
+  --color-border: #1e2a3a;
+  --color-border-hover: #2a3a4e;
+
+  --color-danger: #ff4d6a;
+  --color-warning: #ffaa00;
+  --color-info: #40c4ff;
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Base */
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-surface-hover);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Global button reset */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px var(--color-primary-glow); }
+  50% { box-shadow: 0 0 20px var(--color-primary-glow), 0 0 40px rgba(0, 230, 118, 0.1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}

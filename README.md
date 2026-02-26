@@ -7,7 +7,33 @@ Wildguess respects limitations of hosting behind reverse proxies and load balanc
 
 ## Tech Stack
 
-- **Frontend**: Angular 21
-- **Backend**: Hono
-- **Database**: Prisma + SQLite
+- **Frontend**: Angular 21 - named wildguess
+- **Backend**: Hono - named wildguess-api
+- **Database**: Drizzle ORM + SQLite
 - **Deployment**: Node.js (Dockerized)
+- **Styling**: TailwindCSS v4, Animation support with anime.js
+
+## Getting Started
+
+### Prerequisites
+- Node.js 20+
+- pnpm
+
+### Backend
+```bash
+cd wildguess-api
+pnpm install
+pnpm dev
+```
+The API server starts on `http://localhost:3000`.
+
+### Frontend
+```bash
+cd wildguess
+pnpm install
+pnpm start
+```
+The Angular dev server starts on `http://localhost:4200` with proxy to the API.
+
+## Documentation
+Architecture and design decisions are documented in the [docs/](docs/) directory.

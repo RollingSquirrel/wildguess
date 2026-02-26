@@ -1,2 +1,4 @@
 pnpm-workspace.yaml
 .agents
+sqlite.db
+sqlite.db-*
