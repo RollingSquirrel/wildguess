@@ -190,14 +190,14 @@
 
                     <!-- Stats still visible -->
                     @if (stats(); as s) {
-                    <div class="stats-grid mt-6">
-                        <div class="stat-card">
-                            <div class="stat-label">Average</div>
-                            <div class="stat-value">{{ s.average }}</div>
+                    <div class="stats-row mt-8 mx-auto max-w-sm">
+                        <div class="stat-pill">
+                            <span class="stat-num">{{ s.average }}</span>
+                            <span class="stat-lbl">Avg</span>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Median</div>
-                            <div class="stat-value">{{ s.median }}</div>
+                        <div class="stat-pill">
+                            <span class="stat-num">{{ s.median }}</span>
+                            <span class="stat-lbl">Median</span>
                         </div>
                     </div>
                     }
