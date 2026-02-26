@@ -139,6 +139,7 @@ export class DonutChartComponent {
     readonly strokeWidth = 18;
 
     segments: Segment[] = [];
+    private lastDistStr: string | null = null;
 
     constructor() {
         afterNextRender(() => {
@@ -157,6 +158,12 @@ export class DonutChartComponent {
 
     private renderChart(): void {
         const dist = this.distribution();
+        const distStr = JSON.stringify(dist);
+        if (this.lastDistStr === distStr) {
+            return;
+        }
+        this.lastDistStr = distStr;
+
         const total = Object.values(dist).reduce((a, b) => a + b, 0);
         if (total === 0) return;
 
