@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { db } from '../database/drizzle.config.js';
 import { rooms, roomMembers, users, votes } from '../database/schema.js';
 import { eq, and } from 'drizzle-orm';
-import { randomBytes } from 'node:crypto';
+import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import { authMiddleware } from '../middleware/auth.js';
 import type { AppEnv } from '../types.js';
 
@@ -14,14 +14,23 @@ function generateRoomCode(): string {
     return randomBytes(3).toString('hex').toUpperCase();
 }
 
-function generateId(): string {
-    return randomBytes(16).toString('hex');
+function hashPassword(password: string): string {
+    const salt = randomBytes(16).toString('hex');
+    const hash = scryptSync(password, salt, 64).toString('hex');
+    return `${salt}:${hash}`;
+}
+
+function verifyPassword(password: string, stored: string): boolean {
+    const [salt, hash] = stored.split(':');
+    const buf = Buffer.from(hash, 'hex');
+    const attempt = scryptSync(password, salt, 64);
+    return timingSafeEqual(buf, attempt);
 }
 
 // POST /api/rooms - Create a room
 roomRoutes.post('/', async (c) => {
     const userId = c.get('userId');
-    const body = await c.req.json<{ name: string }>();
+    const body = await c.req.json<{ name: string; password?: string }>();
 
     if (!body.name || body.name.trim().length === 0) {
         return c.json({ error: 'Room name is required' }, 400);
@@ -30,6 +39,8 @@ roomRoutes.post('/', async (c) => {
     const roomId = generateRoomCode();
     const now = Date.now();
 
+    const passwordHash = body.password ? hashPassword(body.password) : null;
+
     db.insert(rooms)
         .values({
             id: roomId,
@@ -37,6 +48,7 @@ roomRoutes.post('/', async (c) => {
             hostId: userId,
             phase: 'voting',
             round: 1,
+            passwordHash,
             createdAt: now,
         })
         .run();
@@ -79,8 +91,41 @@ roomRoutes.get('/', async (c) => {
             phase: room.phase,
             memberCount,
             isHost: room.hostId === userId,
+            hasPassword: !!room.passwordHash,
         });
     }
+
+    return c.json({ rooms: result });
+});
+
+// GET /api/rooms/discover - List ALL rooms for browsing
+roomRoutes.get('/discover', async (c) => {
+    const userId = c.get('userId');
+
+    const allRooms = db.select().from(rooms).all();
+
+    const result = allRooms.map((room) => {
+        const memberCount = db
+            .select({ userId: roomMembers.userId })
+            .from(roomMembers)
+            .where(eq(roomMembers.roomId, room.id))
+            .all().length;
+
+        const isMember = db
+            .select()
+            .from(roomMembers)
+            .where(and(eq(roomMembers.roomId, room.id), eq(roomMembers.userId, userId)))
+            .get();
+
+        return {
+            id: room.id,
+            name: room.name,
+            phase: room.phase,
+            memberCount,
+            hasPassword: !!room.passwordHash,
+            isMember: !!isMember,
+        };
+    });
 
     return c.json({ rooms: result });
 });
@@ -219,6 +264,17 @@ roomRoutes.post('/:id/join', async (c) => {
         .get();
 
     if (existing) return c.json({ success: true, alreadyMember: true });
+
+    // Check password if room is protected
+    if (room.passwordHash) {
+        const body = await c.req.json<{ password?: string }>();
+        if (!body.password) {
+            return c.json({ error: 'Password required' }, 401);
+        }
+        if (!verifyPassword(body.password, room.passwordHash)) {
+            return c.json({ error: 'Invalid password' }, 401);
+        }
+    }
 
     db.insert(roomMembers).values({ roomId, userId, joinedAt: Date.now() }).run();
     return c.json({ success: true });

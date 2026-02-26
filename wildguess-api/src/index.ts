@@ -46,6 +46,7 @@ function initDb() {
       phase TEXT NOT NULL DEFAULT 'voting',
       current_topic TEXT,
       round INTEGER NOT NULL DEFAULT 1,
+      password_hash TEXT,
       created_at INTEGER NOT NULL
     );
 

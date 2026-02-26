@@ -20,6 +20,16 @@ export interface RoomSummary {
     phase: RoomPhase;
     memberCount: number;
     isHost: boolean;
+    hasPassword: boolean;
+}
+
+export interface DiscoverRoom {
+    id: string;
+    name: string;
+    phase: RoomPhase;
+    memberCount: number;
+    hasPassword: boolean;
+    isMember: boolean;
 }
 
 export type RoomPhase = 'voting' | 'revealed' | 'versus';

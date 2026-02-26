@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, interval, switchMap, startWith } from 'rxjs';
 import { AuthService } from './auth.service';
-import type { RoomSummary, RoomState } from '../models/api.models';
+import type { RoomSummary, RoomState, DiscoverRoom } from '../models/api.models';
 
 const API_BASE = '/api';
 
@@ -20,6 +20,11 @@ export class RoomService {
         return this.http.get<{ rooms: RoomSummary[] }>(`${API_BASE}/rooms`, this.headers());
     }
 
+    /** Discover all rooms */
+    discoverRooms(): Observable<{ rooms: DiscoverRoom[] }> {
+        return this.http.get<{ rooms: DiscoverRoom[] }>(`${API_BASE}/rooms/discover`, this.headers());
+    }
+
     /** Get full room state (single request) */
     getRoomState(roomId: string): Observable<RoomState> {
         return this.http.get<RoomState>(`${API_BASE}/rooms/${roomId}`, this.headers());
@@ -33,16 +38,20 @@ export class RoomService {
         );
     }
 
-    /** Create a new room */
-    createRoom(name: string): Observable<{ roomId: string }> {
-        return this.http.post<{ roomId: string }>(`${API_BASE}/rooms`, { name }, this.headers());
+    /** Create a new room (optionally password-protected) */
+    createRoom(name: string, password?: string): Observable<{ roomId: string }> {
+        return this.http.post<{ roomId: string }>(
+            `${API_BASE}/rooms`,
+            { name, ...(password ? { password } : {}) },
+            this.headers(),
+        );
     }
 
-    /** Join a room by code */
-    joinRoom(roomId: string): Observable<{ success: boolean }> {
+    /** Join a room by code (optionally with password) */
+    joinRoom(roomId: string, password?: string): Observable<{ success: boolean }> {
         return this.http.post<{ success: boolean }>(
             `${API_BASE}/rooms/${roomId}/join`,
-            {},
+            password ? { password } : {},
             this.headers(),
         );
     }

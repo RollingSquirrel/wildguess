@@ -24,6 +24,7 @@ export const rooms = sqliteTable('rooms', {
     phase: text('phase').notNull().default('voting'),
     currentTopic: text('current_topic'),
     round: integer('round').notNull().default(1),
+    passwordHash: text('password_hash'),
     createdAt: integer('created_at').notNull(),
 });
 

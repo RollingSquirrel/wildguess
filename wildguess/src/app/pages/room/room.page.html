@@ -94,55 +94,59 @@
                 <div class="revealed-section" [class.phase-enter]="phaseAnimating()">
                     <h2 class="section-title">Results</h2>
 
-                    <!-- Vote cards revealed -->
-                    <div class="revealed-votes">
-                        @for (member of members(); track member.userId) {
-                        <div class="revealed-card" [class.revealed-card-flip]="!phaseAnimating()">
-                            <div class="revealed-card-inner">
-                                <div class="revealed-card-value">{{ member.vote ?? '–' }}</div>
-                                <div class="revealed-card-name">{{ member.username }}</div>
-                            </div>
-                        </div>
-                        }
-                    </div>
-
-                    <!-- Stats -->
-                    @if (stats(); as s) {
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-label">Average</div>
-                            <div class="stat-value">{{ s.average }}</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Median</div>
-                            <div class="stat-value">{{ s.median }}</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Min</div>
-                            <div class="stat-value">{{ s.min }}</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Max</div>
-                            <div class="stat-value">{{ s.max }}</div>
-                        </div>
-                    </div>
-
-                    <!-- Distribution chart -->
-                    <div class="distribution-chart">
-                        <h3 class="text-sm font-medium text-[var(--color-text-secondary)] mb-3">Distribution</h3>
-                        <div class="chart-bars">
-                            @for (entry of getDistributionEntries(); track entry[0]) {
-                            <div class="chart-bar-group">
-                                <div class="chart-bar-container">
-                                    <div class="chart-bar" [style.height.%]="getBarHeight(entry[1])"></div>
+                    <div class="results-layout">
+                        <!-- Left: Results table + stats -->
+                        <div class="results-main">
+                            <!-- Results table -->
+                            <div class="results-table">
+                                @for (member of members(); track member.userId; let i = $index) {
+                                <div class="result-row" [style.animation-delay.ms]="i * 80">
+                                    <div class="result-avatar">
+                                        {{ member.username.charAt(0).toUpperCase() }}
+                                    </div>
+                                    <div class="result-name">{{ member.username }}</div>
+                                    <div class="result-vote-value">{{ member.vote ?? '–' }}</div>
+                                    @if (stats() && member.vote && member.vote !== '?') {
+                                    <div class="result-bar-track">
+                                        <div class="result-bar-fill"
+                                            [style.width.%]="(+member.vote / stats()!.max) * 100">
+                                        </div>
+                                    </div>
+                                    }
                                 </div>
-                                <div class="chart-label">{{ entry[0] }}</div>
-                                <div class="chart-count">{{ entry[1] }}</div>
+                                }
+                            </div>
+
+                            <!-- Large readable stats -->
+                            @if (stats(); as s) {
+                            <div class="stats-row">
+                                <div class="stat-pill">
+                                    <span class="stat-num">{{ s.average }}</span>
+                                    <span class="stat-lbl">Avg</span>
+                                </div>
+                                <div class="stat-pill">
+                                    <span class="stat-num">{{ s.median }}</span>
+                                    <span class="stat-lbl">Median</span>
+                                </div>
+                                <div class="stat-pill stat-pill-accent">
+                                    <span class="stat-num">{{ s.min }}</span>
+                                    <span class="stat-lbl">Min</span>
+                                </div>
+                                <div class="stat-pill stat-pill-accent">
+                                    <span class="stat-num">{{ s.max }}</span>
+                                    <span class="stat-lbl">Max</span>
+                                </div>
                             </div>
                             }
                         </div>
+
+                        <!-- Right: Donut chart -->
+                        @if (stats(); as s) {
+                        <div class="results-chart">
+                            <app-donut-chart [distribution]="s.distribution" [totalVotes]="s.totalVotes" />
+                        </div>
+                        }
                     </div>
-                    }
                 </div>
                 }
 

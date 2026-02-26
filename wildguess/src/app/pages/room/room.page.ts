@@ -13,11 +13,12 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { RoomService } from '../../services/room.service';
 import { FIBONACCI_VALUES, type RoomState, type RoomPhase } from '../../models/api.models';
+import { DonutChartComponent } from '../../components/donut-chart';
 
 @Component({
     selector: 'app-room',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, DonutChartComponent],
     templateUrl: './room.page.html',
     styleUrl: './room.page.css',
 })
