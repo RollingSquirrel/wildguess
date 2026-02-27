@@ -1,0 +1,14 @@
+# Handle line endings automatically for files detected as text
+# and force them to LF when they are committed to the repo.
+* text=auto eol=lf
+
+# Explicitly ensure shell scripts and Docker files are always LF
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.py text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+
+# Keep binary files (images, etc.) as-is
+*.png binary
+*.jpg binary
