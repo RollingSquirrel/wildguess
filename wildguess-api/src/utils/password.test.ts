@@ -7,7 +7,7 @@ describe('Password Utilities', () => {
       const result = hashPassword('my-secret-password');
       expect(result).toBeTypeOf('string');
       expect(result).toContain(':');
-      
+
       const parts = result.split(':');
       expect(parts.length).toBe(2);
       expect(parts[0].length).toBeGreaterThan(0); // Salt
@@ -25,7 +25,7 @@ describe('Password Utilities', () => {
     it('should return true for a correct password', () => {
       const originalPassword = 'correct-horse-battery-staple';
       const storedHash = hashPassword(originalPassword);
-      
+
       expect(verifyPassword(originalPassword, storedHash)).toBe(true);
     });
 

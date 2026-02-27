@@ -13,10 +13,10 @@ export function verifyPassword(password: string, stored: string): boolean {
 
     const buf = Buffer.from(hash, 'hex');
     const attempt = scryptSync(password, salt, 64);
-    
+
     // Check if the buffers are the same length before timingSafeEqual to avoid errors
     if (buf.length !== attempt.length) return false;
-    
+
     return timingSafeEqual(buf, attempt);
   } catch (error) {
     return false;
