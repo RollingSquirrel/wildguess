@@ -1,150 +1,181 @@
 <div class="min-h-screen">
-    <!-- Header -->
-    <header class="header">
-        <div class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
-            <h1 class="text-xl font-bold">
-                <span class="brand-accent">Wild</span>guess
-            </h1>
-            <div class="flex items-center gap-4">
-                <span class="user-name">{{ auth.currentUser()?.username }}</span>
-                <button (click)="logout()" class="btn-ghost text-sm" aria-label="Log out">Logout</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Content -->
-    <div class="max-w-5xl mx-auto px-4 py-6">
-        <!-- Create Room -->
-        <div class="flex items-center gap-3 mb-6">
-            <button (click)="showCreateForm.set(!showCreateForm())" class="btn-primary">
-                + Create Room
-            </button>
-        </div>
-
-        @if (showCreateForm()) {
-        <div class="card mb-6 animate-slide-up">
-            <h2 class="text-lg font-semibold mb-4">Create a New Room</h2>
-            <form [formGroup]="createForm" (ngSubmit)="createRoom()">
-                <div class="flex gap-3 mb-3">
-                    <input id="create-room-name" type="text" formControlName="name" class="input-field flex-1"
-                        placeholder="Room name (e.g. Sprint 42)" aria-label="Room name" />
-                    <button type="submit" [disabled]="createForm.invalid" class="btn-primary">Create</button>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="lock-icon" aria-hidden="true">🔒</span>
-                    <input id="create-room-password" type="password" formControlName="password"
-                        class="input-field input-field-small flex-1"
-                        placeholder="Optional password (leave empty for open room)"
-                        aria-label="Room password (optional)" />
-                </div>
-            </form>
-        </div>
-        }
-
-        @if (error()) {
-        <div class="error-banner" role="alert">{{ error() }}</div>
-        }
-
-        <!-- Password Join Dialog (modal overlay) -->
-        @if (joiningRoomId()) {
-        <div class="modal-backdrop" (click)="cancelPasswordJoin()">
-            <div class="modal-card" (click)="$event.stopPropagation()">
-                <h2 class="text-lg font-semibold mb-2">🔒 Password Required</h2>
-                <p class="modal-subtitle">This room is password-protected. Enter the password to join.</p>
-                @if (joinError()) {
-                <div class="error-banner-sm">{{ joinError() }}</div>
-                }
-                <div class="flex gap-3 mt-4">
-                    <input type="password" class="input-field flex-1" placeholder="Enter password"
-                        aria-label="Room password" [value]="joinPassword()"
-                        (input)="joinPassword.set($any($event.target).value)" (keydown.enter)="submitPasswordJoin()" />
-                    <button (click)="submitPasswordJoin()" class="btn-primary">Join</button>
-                </div>
-                <button (click)="cancelPasswordJoin()" class="btn-cancel mt-3">Cancel</button>
-            </div>
-        </div>
-        }
-
-        <!-- Tabs -->
-        <div class="tabs">
-            <button class="tab" [class.tab-active]="activeTab() === 'browse'" (click)="activeTab.set('browse')">
-                Browse Rooms
-            </button>
-            <button class="tab" [class.tab-active]="activeTab() === 'mine'" (click)="activeTab.set('mine')">
-                Your Rooms
-            </button>
-        </div>
-
-        <!-- Browse Rooms Tab -->
-        @if (activeTab() === 'browse') {
-        @if (allRooms().length === 0) {
-        <div class="card text-center py-12">
-            <p class="empty-primary">No rooms available</p>
-            <p class="empty-secondary">Create a new room to get started</p>
-        </div>
-        } @else {
-        <div class="room-grid">
-            @for (room of allRooms(); track room.id) {
-            <button (click)="joinRoom(room)" class="room-card" [class.room-card-member]="room.isMember"
-                [attr.aria-label]="'Join room ' + room.name">
-                <div class="flex items-start justify-between mb-2">
-                    <h3 class="room-name">{{ room.name }}</h3>
-                    <div class="flex items-center gap-2">
-                        @if (room.hasPassword) {
-                        <span class="lock-badge" title="Password protected">🔒</span>
-                        }
-                        @if (room.isMember) {
-                        <span class="badge-member">Joined</span>
-                        }
-                    </div>
-                </div>
-                <div class="room-meta">
-                    <span class="meta-item">
-                        <span aria-hidden="true">👥</span> {{ room.memberCount }}
-                    </span>
-                    <span [class]="'badge-phase badge-' + room.phase">{{ room.phase }}</span>
-                </div>
-                <div class="room-code-small">{{ room.id }}</div>
-            </button>
-            }
-        </div>
-        }
-        }
-
-        <!-- Your Rooms Tab -->
-        @if (activeTab() === 'mine') {
-        @if (myRooms().length === 0) {
-        <div class="card text-center py-12">
-            <p class="empty-primary">You haven't joined any rooms</p>
-            <p class="empty-secondary">Browse rooms or create a new one</p>
-        </div>
-        } @else {
-        <div class="room-grid">
-            @for (room of myRooms(); track room.id) {
-            <button (click)="enterRoom(room.id)" class="room-card room-card-member"
-                [attr.aria-label]="'Enter room ' + room.name">
-                <div class="flex items-start justify-between mb-2">
-                    <h3 class="room-name">{{ room.name }}</h3>
-                    <div class="flex items-center gap-2">
-                        @if (room.hasPassword) {
-                        <span class="lock-badge" title="Password protected">🔒</span>
-                        }
-                        @if (room.isHost) {
-                        <span class="badge-host">Host</span>
-                        }
-                    </div>
-                </div>
-                <div class="room-meta">
-                    <span class="meta-item">
-                        <span aria-hidden="true">👥</span> {{ room.memberCount }}
-                    </span>
-                    <span [class]="'badge-phase badge-' + room.phase">{{ room.phase }}</span>
-                </div>
-                <div class="room-code-small">{{ room.id }}</div>
-            </button>
-            }
-        </div>
-        }
-        }
+  <!-- Header -->
+  <header class="header">
+    <div class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
+      <h1 class="text-xl font-bold"><span class="brand-accent">Wild</span>guess</h1>
+      <div class="flex items-center gap-4">
+        <span class="user-name">{{ auth.currentUser()?.username }}</span>
+        <button (click)="logout()" class="btn-ghost text-sm" aria-label="Log out">Logout</button>
+      </div>
     </div>
+  </header>
+
+  <!-- Content -->
+  <div class="max-w-5xl mx-auto px-4 py-6">
+    <!-- Create Room -->
+    <div class="flex items-center gap-3 mb-6">
+      <button (click)="showCreateForm.set(!showCreateForm())" class="btn-primary">
+        + Create Room
+      </button>
+    </div>
+
+    @if (showCreateForm()) {
+      <div class="card mb-6 animate-slide-up">
+        <h2 class="text-lg font-semibold mb-4">Create a New Room</h2>
+        <form [formGroup]="createForm" (ngSubmit)="createRoom()">
+          <div class="flex gap-3 mb-3">
+            <input
+              id="create-room-name"
+              type="text"
+              formControlName="name"
+              class="input-field flex-1"
+              placeholder="Room name (e.g. Sprint 42)"
+              aria-label="Room name"
+            />
+            <button type="submit" [disabled]="createForm.invalid" class="btn-primary">
+              Create
+            </button>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="lock-icon" aria-hidden="true">🔒</span>
+            <input
+              id="create-room-password"
+              type="password"
+              formControlName="password"
+              class="input-field input-field-small flex-1"
+              placeholder="Optional password (leave empty for open room)"
+              aria-label="Room password (optional)"
+            />
+          </div>
+        </form>
+      </div>
+    }
+
+    @if (error()) {
+      <div class="error-banner" role="alert">{{ error() }}</div>
+    }
+
+    <!-- Password Join Dialog (modal overlay) -->
+    @if (joiningRoomId()) {
+      <div class="modal-backdrop" (click)="cancelPasswordJoin()">
+        <div class="modal-card" (click)="$event.stopPropagation()">
+          <h2 class="text-lg font-semibold mb-2">🔒 Password Required</h2>
+          <p class="modal-subtitle">This room is password-protected. Enter the password to join.</p>
+          @if (joinError()) {
+            <div class="error-banner-sm">{{ joinError() }}</div>
+          }
+          <div class="flex gap-3 mt-4">
+            <input
+              type="password"
+              class="input-field flex-1"
+              placeholder="Enter password"
+              aria-label="Room password"
+              [value]="joinPassword()"
+              (input)="joinPassword.set($any($event.target).value)"
+              (keydown.enter)="submitPasswordJoin()"
+            />
+            <button (click)="submitPasswordJoin()" class="btn-primary">Join</button>
+          </div>
+          <button (click)="cancelPasswordJoin()" class="btn-cancel mt-3">Cancel</button>
+        </div>
+      </div>
+    }
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button
+        class="tab"
+        [class.tab-active]="activeTab() === 'browse'"
+        (click)="activeTab.set('browse')"
+      >
+        Browse Rooms
+      </button>
+      <button
+        class="tab"
+        [class.tab-active]="activeTab() === 'mine'"
+        (click)="activeTab.set('mine')"
+      >
+        Your Rooms
+      </button>
+    </div>
+
+    <!-- Browse Rooms Tab -->
+    @if (activeTab() === 'browse') {
+      @if (allRooms().length === 0) {
+        <div class="card text-center py-12">
+          <p class="empty-primary">No rooms available</p>
+          <p class="empty-secondary">Create a new room to get started</p>
+        </div>
+      } @else {
+        <div class="room-grid">
+          @for (room of allRooms(); track room.id) {
+            <button
+              (click)="joinRoom(room)"
+              class="room-card"
+              [class.room-card-member]="room.isMember"
+              [attr.aria-label]="'Join room ' + room.name"
+            >
+              <div class="flex items-start justify-between mb-2">
+                <h3 class="room-name">{{ room.name }}</h3>
+                <div class="flex items-center gap-2">
+                  @if (room.hasPassword) {
+                    <span class="lock-badge" title="Password protected">🔒</span>
+                  }
+                  @if (room.isMember) {
+                    <span class="badge-member">Joined</span>
+                  }
+                </div>
+              </div>
+              <div class="room-meta">
+                <span class="meta-item">
+                  <span aria-hidden="true">👥</span> {{ room.memberCount }}
+                </span>
+                <span [class]="'badge-phase badge-' + room.phase">{{ room.phase }}</span>
+              </div>
+              <div class="room-code-small">{{ room.id }}</div>
+            </button>
+          }
+        </div>
+      }
+    }
+
+    <!-- Your Rooms Tab -->
+    @if (activeTab() === 'mine') {
+      @if (myRooms().length === 0) {
+        <div class="card text-center py-12">
+          <p class="empty-primary">You haven't joined any rooms</p>
+          <p class="empty-secondary">Browse rooms or create a new one</p>
+        </div>
+      } @else {
+        <div class="room-grid">
+          @for (room of myRooms(); track room.id) {
+            <button
+              (click)="enterRoom(room.id)"
+              class="room-card room-card-member"
+              [attr.aria-label]="'Enter room ' + room.name"
+            >
+              <div class="flex items-start justify-between mb-2">
+                <h3 class="room-name">{{ room.name }}</h3>
+                <div class="flex items-center gap-2">
+                  @if (room.hasPassword) {
+                    <span class="lock-badge" title="Password protected">🔒</span>
+                  }
+                  @if (room.isHost) {
+                    <span class="badge-host">Host</span>
+                  }
+                </div>
+              </div>
+              <div class="room-meta">
+                <span class="meta-item">
+                  <span aria-hidden="true">👥</span> {{ room.memberCount }}
+                </span>
+                <span [class]="'badge-phase badge-' + room.phase">{{ room.phase }}</span>
+              </div>
+              <div class="room-code-small">{{ room.id }}</div>
+            </button>
+          }
+        </div>
+      }
+    }
+  </div>
 </div>

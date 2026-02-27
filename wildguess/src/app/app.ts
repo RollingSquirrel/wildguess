@@ -17,4 +17,4 @@ import { BackgroundParticlesComponent } from './components/background-particles'
     }
   `,
 })
-export class App { }
+export class App {}

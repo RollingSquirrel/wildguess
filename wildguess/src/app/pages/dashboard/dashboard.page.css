@@ -1,319 +1,321 @@
 .header {
-    background: var(--color-bg-secondary);
-    border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .brand-accent {
-    color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .user-name {
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
 }
 
 .card {
-    background: var(--color-bg-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 1.5rem;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
 }
 
 /* Tabs */
 .tabs {
-    display: flex;
-    gap: 2px;
-    margin-bottom: 1.5rem;
-    background: var(--color-bg-secondary);
-    border-radius: 10px;
-    padding: 3px;
+  display: flex;
+  gap: 2px;
+  margin-bottom: 1.5rem;
+  background: var(--color-bg-secondary);
+  border-radius: 10px;
+  padding: 3px;
 }
 
 .tab {
-    flex: 1;
-    padding: 0.6rem 1rem;
-    border: none;
-    border-radius: 8px;
-    background: transparent;
-    color: var(--color-text-secondary);
-    font-weight: 500;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s;
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .tab:hover {
-    color: var(--color-text-primary);
+  color: var(--color-text-primary);
 }
 
 .tab-active {
-    background: var(--color-bg-surface);
-    color: var(--color-primary);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  background: var(--color-bg-surface);
+  color: var(--color-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 /* Room Grid */
 .room-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
 }
 
 .room-card {
-    display: block;
-    width: 100%;
-    text-align: left;
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 1.25rem;
-    transition: all 0.2s;
-    cursor: pointer;
-    animation: slideUp 0.4s ease-out both;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  animation: slideUp 0.4s ease-out both;
 }
 
 .room-card:hover {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 20px var(--color-primary-glow);
-    transform: translateY(-2px);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 20px var(--color-primary-glow);
+  transform: translateY(-2px);
 }
 
 .room-card-member {
-    border-left: 3px solid var(--color-primary);
+  border-left: 3px solid var(--color-primary);
 }
 
 .room-name {
-    font-weight: 600;
-    color: var(--color-text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .room-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
 }
 
 .meta-item {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .room-code-small {
-    margin-top: 0.75rem;
-    font-size: 0.7rem;
-    font-family: monospace;
-    color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-size: 0.7rem;
+  font-family: monospace;
+  color: var(--color-text-muted);
 }
 
 /* Badges */
 .badge-host {
-    font-size: 0.65rem;
-    font-weight: 600;
-    background: var(--color-primary-subtle);
-    color: var(--color-primary);
-    padding: 2px 8px;
-    border-radius: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+  padding: 2px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .badge-member {
-    font-size: 0.65rem;
-    font-weight: 600;
-    background: rgba(64, 196, 255, 0.1);
-    color: var(--color-info);
-    padding: 2px 8px;
-    border-radius: 6px;
-    text-transform: uppercase;
+  font-size: 0.65rem;
+  font-weight: 600;
+  background: rgba(64, 196, 255, 0.1);
+  color: var(--color-info);
+  padding: 2px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
 }
 
 .badge-phase {
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-transform: capitalize;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 .badge-voting {
-    background: rgba(64, 196, 255, 0.1);
-    color: var(--color-info);
+  background: rgba(64, 196, 255, 0.1);
+  color: var(--color-info);
 }
 
 .badge-revealed {
-    background: rgba(0, 230, 118, 0.1);
-    color: var(--color-primary);
+  background: rgba(0, 230, 118, 0.1);
+  color: var(--color-primary);
 }
 
 .badge-versus {
-    background: rgba(255, 170, 0, 0.1);
-    color: var(--color-warning);
+  background: rgba(255, 170, 0, 0.1);
+  color: var(--color-warning);
 }
 
 .lock-badge {
-    font-size: 0.8rem;
+  font-size: 0.8rem;
 }
 
 .lock-icon {
-    font-size: 0.85rem;
-    opacity: 0.6;
+  font-size: 0.85rem;
+  opacity: 0.6;
 }
 
 /* Form */
 .input-field {
-    padding: 0.65rem 1rem;
-    background: var(--color-bg-primary);
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    color: var(--color-text-primary);
-    font-size: 0.9rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 0.65rem 1rem;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .input-field:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px var(--color-primary-glow);
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-glow);
 }
 
 .input-field::placeholder {
-    color: var(--color-text-muted);
+  color: var(--color-text-muted);
 }
 
 .input-field-small {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
 }
 
 .btn-primary {
-    padding: 0.65rem 1.25rem;
-    background: var(--color-primary);
-    color: var(--color-bg-primary);
-    font-weight: 600;
-    border-radius: 10px;
-    border: none;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-    white-space: nowrap;
-    cursor: pointer;
+  padding: 0.65rem 1.25rem;
+  background: var(--color-primary);
+  color: var(--color-bg-primary);
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: var(--color-primary-dim);
-    box-shadow: 0 0 20px var(--color-primary-glow);
+  background: var(--color-primary-dim);
+  box-shadow: 0 0 20px var(--color-primary-glow);
 }
 
 .btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .btn-ghost {
-    background: transparent;
-    border: none;
-    color: var(--color-text-secondary);
-    font-weight: 500;
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.15s;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
 }
 
 .btn-ghost:hover {
-    color: var(--color-danger);
-    background: rgba(255, 77, 106, 0.08);
+  color: var(--color-danger);
+  background: rgba(255, 77, 106, 0.08);
 }
 
 .btn-cancel {
-    width: 100%;
-    background: transparent;
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
-    padding: 0.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: all 0.15s;
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.15s;
 }
 
 .btn-cancel:hover {
-    border-color: var(--color-text-secondary);
+  border-color: var(--color-text-secondary);
 }
 
 /* Modal */
 .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    animation: fadeIn 0.2s ease-out;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .modal-card {
-    background: var(--color-bg-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 16px;
-    padding: 2rem;
-    max-width: 400px;
-    width: 90%;
-    animation: slideUp 0.3s ease-out;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  animation: slideUp 0.3s ease-out;
 }
 
 .modal-subtitle {
-    color: var(--color-text-secondary);
-    font-size: 0.85rem;
-    margin-bottom: 0.5rem;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
 }
 
 /* Errors */
 .error-banner {
-    background: rgba(255, 77, 106, 0.1);
-    color: var(--color-danger);
-    padding: 0.75rem 1rem;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
+  background: rgba(255, 77, 106, 0.1);
+  color: var(--color-danger);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
 }
 
 .error-banner-sm {
-    background: rgba(255, 77, 106, 0.1);
-    color: var(--color-danger);
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
+  background: rgba(255, 77, 106, 0.1);
+  color: var(--color-danger);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
 }
 
 .empty-primary {
-    color: var(--color-text-muted);
-    font-size: 1.1rem;
-    margin-bottom: 0.25rem;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
 }
 
 .empty-secondary {
-    color: var(--color-text-muted);
-    font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
 }
 
 .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
+  animation: slideUp 0.3s ease-out;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
+  from {
+    opacity: 0;
+  }
 
-    to {
-        opacity: 1;
-    }
+  to {
+    opacity: 1;
+  }
 }

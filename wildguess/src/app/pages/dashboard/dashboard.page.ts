@@ -45,13 +45,15 @@ export class DashboardPage implements OnInit, OnDestroy {
   private pollSub?: Subscription;
 
   ngOnInit(): void {
-    this.pollSub = interval(10000).pipe(
-      startWith(0),
-      switchMap(() => this.roomService.discoverRooms()),
-    ).subscribe({
-      next: (res) => this.allRooms.set(res.rooms),
-      error: () => this.error.set('Failed to load rooms'),
-    });
+    this.pollSub = interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() => this.roomService.discoverRooms()),
+      )
+      .subscribe({
+        next: (res) => this.allRooms.set(res.rooms),
+        error: () => this.error.set('Failed to load rooms'),
+      });
 
     // Also load user's rooms
     this.roomService.listRooms().subscribe({

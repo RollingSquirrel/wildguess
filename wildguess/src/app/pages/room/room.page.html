@@ -1,258 +1,288 @@
 @if (roomState(); as room) {
-<div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col">
     <!-- Header -->
     <header class="room-header">
-        <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
-            <div class="flex items-center gap-4">
-                <h1 class="text-lg font-bold truncate">{{ room.name }}</h1>
-                <button (click)="copyRoomCode()" class="room-code" [attr.aria-label]="'Copy room code ' + room.id"
-                    title="Click to copy">
-                    {{ room.id }}
-                </button>
-                <span class="phase-indicator" [class]="'phase-' + room.phase">
-                    {{ room.phase }}
-                </span>
-            </div>
-            <div class="flex items-center gap-3">
-                <span class="text-[var(--color-text-secondary)] text-sm">Round {{ room.round }}</span>
-                <button (click)="leaveRoom()" class="btn-danger-ghost text-sm" aria-label="Leave room">Leave</button>
-            </div>
+      <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
+        <div class="flex items-center gap-4">
+          <h1 class="text-lg font-bold truncate">{{ room.name }}</h1>
+          <button
+            (click)="copyRoomCode()"
+            class="room-code"
+            [attr.aria-label]="'Copy room code ' + room.id"
+            title="Click to copy"
+          >
+            {{ room.id }}
+          </button>
+          <span class="phase-indicator" [class]="'phase-' + room.phase">
+            {{ room.phase }}
+          </span>
         </div>
+        <div class="flex items-center gap-3">
+          <span class="text-[var(--color-text-secondary)] text-sm">Round {{ room.round }}</span>
+          <button (click)="leaveRoom()" class="btn-danger-ghost text-sm" aria-label="Leave room">
+            Leave
+          </button>
+        </div>
+      </div>
 
-        <!-- Topic bar -->
-        @if (room.currentTopic) {
+      <!-- Topic bar -->
+      @if (room.currentTopic) {
         <div class="topic-bar">
-            <div class="max-w-6xl mx-auto px-4">
-                <span class="text-[var(--color-text-muted)] text-xs uppercase tracking-wider mr-2">Topic</span>
-                <span class="text-[var(--color-text-primary)] text-sm">{{ room.currentTopic }}</span>
-            </div>
+          <div class="max-w-6xl mx-auto px-4">
+            <span class="text-[var(--color-text-muted)] text-xs uppercase tracking-wider mr-2"
+              >Topic</span
+            >
+            <span class="text-[var(--color-text-primary)] text-sm">{{ room.currentTopic }}</span>
+          </div>
         </div>
-        }
+      }
     </header>
 
     <!-- Main content -->
     <div class="flex-1 max-w-6xl mx-auto w-full px-4 py-6">
-        <div class="room-layout">
-            <!-- Main area -->
-            <div class="main-area">
-                @if (error()) {
-                <div class="error-banner" role="alert">{{ error() }}</div>
-                }
+      <div class="room-layout">
+        <!-- Main area -->
+        <div class="main-area">
+          @if (error()) {
+            <div class="error-banner" role="alert">{{ error() }}</div>
+          }
 
-                <!-- Host controls -->
-                @if (isHost()) {
-                <div class="host-controls">
-                    @if (phase() === 'voting') {
-                    <form [formGroup]="topicForm" (ngSubmit)="setTopic()" class="flex gap-2 mb-3">
-                        <input id="topic-input" type="text" formControlName="topic" class="input-sm flex-1"
-                            placeholder="Set topic for this round..." aria-label="Topic for this round" />
-                        <button type="submit" [disabled]="topicForm.invalid" class="btn-sm">Set</button>
-                    </form>
+          <!-- Host controls -->
+          @if (isHost()) {
+            <div class="host-controls">
+              @if (phase() === 'voting') {
+                <form [formGroup]="topicForm" (ngSubmit)="setTopic()" class="flex gap-2 mb-3">
+                  <input
+                    id="topic-input"
+                    type="text"
+                    formControlName="topic"
+                    class="input-sm flex-1"
+                    placeholder="Set topic for this round..."
+                    aria-label="Topic for this round"
+                  />
+                  <button type="submit" [disabled]="topicForm.invalid" class="btn-sm">Set</button>
+                </form>
 
-                    <button (click)="reveal()" class="btn-action relative overflow-hidden group"
-                        [class.btn-action-ready]="allVoted()">
-                        @if (!allVoted() && votingProgressPercent() > 0) {
-                        <div class="absolute top-0 left-0 bottom-0 bg-primary opacity-20 transition-all duration-300 ease-out z-0"
-                            [style.width.%]="votingProgressPercent()"></div>
-                        }
-                        <span class="relative z-10 block pointer-events-none">
-                            @if (allVoted()) {
-                            ✨ Reveal Votes
-                            } @else {
-                            Reveal Votes Early ({{ votedCount() }}/{{ members().length }})
-                            }
-                        </span>
-                    </button>
-                    }
-
-                    @if (phase() === 'revealed') {
-                    <button (click)="triggerVersus()" class="btn-action btn-versus">
-                        ⚔️ Versus Mode
-                    </button>
-                    }
-
-                    @if (phase() === 'versus') {
-                    <button (click)="nextRound()" class="btn-action btn-next">
-                        🔄 Next Round
-                    </button>
-                    }
-                </div>
-                }
-
-                <!-- VOTING PHASE -->
-                @if (phase() === 'voting') {
-                <div class="voting-section" [class.phase-enter]="phaseAnimating()">
-                    <h2 class="section-title">Cast Your Vote</h2>
-                    <div class="card-grid">
-                        @for (value of fibValues; track value) {
-                        <button (click)="selectVote(value)" class="vote-card"
-                            [class.vote-card-selected]="selectedVote() === value" [attr.aria-label]="'Vote ' + value"
-                            [attr.aria-pressed]="selectedVote() === value">
-                            <span class="vote-value">{{ value }}</span>
-                        </button>
-                        }
-                    </div>
-                </div>
-                }
-
-                <!-- REVEALED PHASE -->
-                @if (phase() === 'revealed') {
-                <div class="revealed-section" [class.phase-enter]="phaseAnimating()">
-                    <h2 class="section-title">Results</h2>
-
-                    <div class="results-layout">
-                        <!-- Left: Results table + stats -->
-                        <div class="results-main">
-                            <!-- Results table -->
-                            <div class="results-table">
-                                @for (member of members(); track member.userId; let i = $index) {
-                                <div class="result-row" [style.animation-delay.ms]="i * 80">
-                                    <div class="result-avatar">
-                                        {{ member.username.charAt(0).toUpperCase() }}
-                                    </div>
-                                    <div class="result-name">{{ member.username }}</div>
-                                    <div class="result-vote-value">{{ member.vote ?? '–' }}</div>
-                                    @if (stats() && member.vote && member.vote !== '?') {
-                                    <div class="result-bar-track">
-                                        <div class="result-bar-fill"
-                                            [style.width.%]="(+member.vote / stats()!.max) * 100">
-                                        </div>
-                                    </div>
-                                    }
-                                </div>
-                                }
-                            </div>
-
-                            <!-- Large readable stats -->
-                            @if (stats(); as s) {
-                            <div class="stats-row">
-                                <div class="stat-pill">
-                                    <span class="stat-num">{{ s.average }}</span>
-                                    <span class="stat-lbl">Avg</span>
-                                </div>
-                                <div class="stat-pill">
-                                    <span class="stat-num">{{ s.median }}</span>
-                                    <span class="stat-lbl">Median</span>
-                                </div>
-                                <div class="stat-pill stat-pill-accent">
-                                    <span class="stat-num">{{ s.min }}</span>
-                                    <span class="stat-lbl">Min</span>
-                                </div>
-                                <div class="stat-pill stat-pill-accent">
-                                    <span class="stat-num">{{ s.max }}</span>
-                                    <span class="stat-lbl">Max</span>
-                                </div>
-                            </div>
-                            }
-                        </div>
-
-                        <!-- Right: Donut chart -->
-                        @if (stats(); as s) {
-                        <div class="results-chart">
-                            <app-donut-chart [distribution]="s.distribution" [totalVotes]="s.totalVotes" />
-                        </div>
-                        }
-                    </div>
-                </div>
-                }
-
-                <!-- VERSUS PHASE -->
-                @if (phase() === 'versus') {
-                <div class="versus-section" [class.phase-enter]="phaseAnimating()">
-                    @if (versus(); as v) {
-                    <div class="versus-arena">
-                        <!-- Low voter -->
-                        <div class="versus-fighter versus-low">
-                            <div class="fighter-card">
-                                <div class="fighter-vote">{{ v.low.vote }}</div>
-                            </div>
-                            <div class="fighter-name">{{ v.low.username }}</div>
-                            <div class="fighter-label">Lower Estimate</div>
-                        </div>
-
-                        <!-- VS badge -->
-                        <div class="vs-badge">
-                            <span class="vs-text">VS</span>
-                        </div>
-
-                        <!-- High voter -->
-                        <div class="versus-fighter versus-high">
-                            <div class="fighter-card">
-                                <div class="fighter-vote">{{ v.high.vote }}</div>
-                            </div>
-                            <div class="fighter-name">{{ v.high.username }}</div>
-                            <div class="fighter-label">Higher Estimate</div>
-                        </div>
-                    </div>
-
-                    <p class="versus-prompt">
-                        Time for discussion! The most extreme voters explain their reasoning.
-                    </p>
+                <button
+                  (click)="reveal()"
+                  class="btn-action relative overflow-hidden group"
+                  [class.btn-action-ready]="allVoted()"
+                >
+                  @if (!allVoted() && votingProgressPercent() > 0) {
+                    <div
+                      class="absolute top-0 left-0 bottom-0 bg-primary opacity-20 transition-all duration-300 ease-out z-0"
+                      [style.width.%]="votingProgressPercent()"
+                    ></div>
+                  }
+                  <span class="relative z-10 block pointer-events-none">
+                    @if (allVoted()) {
+                      ✨ Reveal Votes
                     } @else {
-                    <div class="text-center py-12 text-[var(--color-text-muted)]">
-                        All votes are the same — consensus reached! 🎉
-                    </div>
+                      Reveal Votes Early ({{ votedCount() }}/{{ members().length }})
                     }
+                  </span>
+                </button>
+              }
 
-                    <!-- Stats still visible -->
-                    @if (stats(); as s) {
-                    <div class="stats-row mt-8 mx-auto max-w-sm">
-                        <div class="stat-pill">
-                            <span class="stat-num">{{ s.average }}</span>
-                            <span class="stat-lbl">Avg</span>
-                        </div>
-                        <div class="stat-pill">
-                            <span class="stat-num">{{ s.median }}</span>
-                            <span class="stat-lbl">Median</span>
-                        </div>
-                    </div>
-                    }
-                </div>
-                }
+              @if (phase() === 'revealed') {
+                <button (click)="triggerVersus()" class="btn-action btn-versus">
+                  ⚔️ Versus Mode
+                </button>
+              }
+
+              @if (phase() === 'versus') {
+                <button (click)="nextRound()" class="btn-action btn-next">🔄 Next Round</button>
+              }
             </div>
+          }
 
-            <!-- Sidebar: Members -->
-            <aside class="members-panel" aria-label="Room members">
-                <h2 class="text-sm font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider mb-3">
-                    Members ({{ members().length }})
-                </h2>
-                <ul class="member-list">
-                    @for (member of members(); track member.userId) {
-                    <li class="member-item">
-                        <div class="flex items-center gap-2 min-w-0">
-                            <div class="member-avatar" [class.member-avatar-voted]="member.hasVoted">
-                                {{ member.username.charAt(0).toUpperCase() }}
-                            </div>
-                            <div class="min-w-0">
-                                <div class="member-name">
-                                    {{ member.username }}
-                                    @if (member.isHost) {
-                                    <span class="host-badge">👑</span>
-                                    }
-                                    @if (member.userId === currentUserId()) {
-                                    <span class="you-badge">(you)</span>
-                                    }
-                                </div>
-                                @if (phase() === 'voting') {
-                                <div class="member-status" [class.voted]="member.hasVoted">
-                                    {{ member.hasVoted ? '✓ Voted' : 'Thinking...' }}
-                                </div>
-                                }
-                            </div>
+          <!-- VOTING PHASE -->
+          @if (phase() === 'voting') {
+            <div class="voting-section" [class.phase-enter]="phaseAnimating()">
+              <h2 class="section-title">Cast Your Vote</h2>
+              <div class="card-grid">
+                @for (value of fibValues; track value) {
+                  <button
+                    (click)="selectVote(value)"
+                    class="vote-card"
+                    [class.vote-card-selected]="selectedVote() === value"
+                    [attr.aria-label]="'Vote ' + value"
+                    [attr.aria-pressed]="selectedVote() === value"
+                  >
+                    <span class="vote-value">{{ value }}</span>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- REVEALED PHASE -->
+          @if (phase() === 'revealed') {
+            <div class="revealed-section" [class.phase-enter]="phaseAnimating()">
+              <h2 class="section-title">Results</h2>
+
+              <div class="results-layout">
+                <!-- Left: Results table + stats -->
+                <div class="results-main">
+                  <!-- Results table -->
+                  <div class="results-table">
+                    @for (member of members(); track member.userId; let i = $index) {
+                      <div class="result-row" [style.animation-delay.ms]="i * 80">
+                        <div class="result-avatar">
+                          {{ member.username.charAt(0).toUpperCase() }}
                         </div>
-                        @if (isHost() && member.userId !== currentUserId()) {
-                        <button (click)="kickMember(member.userId)" class="kick-btn"
-                            [attr.aria-label]="'Kick ' + member.username" title="Kick">✕</button>
+                        <div class="result-name">{{ member.username }}</div>
+                        <div class="result-vote-value">{{ member.vote ?? '–' }}</div>
+                        @if (stats() && member.vote && member.vote !== '?') {
+                          <div class="result-bar-track">
+                            <div
+                              class="result-bar-fill"
+                              [style.width.%]="(+member.vote / stats()!.max) * 100"
+                            ></div>
+                          </div>
                         }
-                    </li>
+                      </div>
                     }
-                </ul>
-            </aside>
+                  </div>
+
+                  <!-- Large readable stats -->
+                  @if (stats(); as s) {
+                    <div class="stats-row">
+                      <div class="stat-pill">
+                        <span class="stat-num">{{ s.average }}</span>
+                        <span class="stat-lbl">Avg</span>
+                      </div>
+                      <div class="stat-pill">
+                        <span class="stat-num">{{ s.median }}</span>
+                        <span class="stat-lbl">Median</span>
+                      </div>
+                      <div class="stat-pill stat-pill-accent">
+                        <span class="stat-num">{{ s.min }}</span>
+                        <span class="stat-lbl">Min</span>
+                      </div>
+                      <div class="stat-pill stat-pill-accent">
+                        <span class="stat-num">{{ s.max }}</span>
+                        <span class="stat-lbl">Max</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <!-- Right: Donut chart -->
+                @if (stats(); as s) {
+                  <div class="results-chart">
+                    <app-donut-chart [distribution]="s.distribution" [totalVotes]="s.totalVotes" />
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- VERSUS PHASE -->
+          @if (phase() === 'versus') {
+            <div class="versus-section" [class.phase-enter]="phaseAnimating()">
+              @if (versus(); as v) {
+                <div class="versus-arena">
+                  <!-- Low voter -->
+                  <div class="versus-fighter versus-low">
+                    <div class="fighter-card">
+                      <div class="fighter-vote">{{ v.low.vote }}</div>
+                    </div>
+                    <div class="fighter-name">{{ v.low.username }}</div>
+                    <div class="fighter-label">Lower Estimate</div>
+                  </div>
+
+                  <!-- VS badge -->
+                  <div class="vs-badge">
+                    <span class="vs-text">VS</span>
+                  </div>
+
+                  <!-- High voter -->
+                  <div class="versus-fighter versus-high">
+                    <div class="fighter-card">
+                      <div class="fighter-vote">{{ v.high.vote }}</div>
+                    </div>
+                    <div class="fighter-name">{{ v.high.username }}</div>
+                    <div class="fighter-label">Higher Estimate</div>
+                  </div>
+                </div>
+
+                <p class="versus-prompt">
+                  Time for discussion! The most extreme voters explain their reasoning.
+                </p>
+              } @else {
+                <div class="text-center py-12 text-[var(--color-text-muted)]">
+                  All votes are the same — consensus reached! 🎉
+                </div>
+              }
+
+              <!-- Stats still visible -->
+              @if (stats(); as s) {
+                <div class="stats-row mt-8 mx-auto max-w-sm">
+                  <div class="stat-pill">
+                    <span class="stat-num">{{ s.average }}</span>
+                    <span class="stat-lbl">Avg</span>
+                  </div>
+                  <div class="stat-pill">
+                    <span class="stat-num">{{ s.median }}</span>
+                    <span class="stat-lbl">Median</span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
         </div>
+
+        <!-- Sidebar: Members -->
+        <aside class="members-panel" aria-label="Room members">
+          <h2
+            class="text-sm font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider mb-3"
+          >
+            Members ({{ members().length }})
+          </h2>
+          <ul class="member-list">
+            @for (member of members(); track member.userId) {
+              <li class="member-item">
+                <div class="flex items-center gap-2 min-w-0">
+                  <div class="member-avatar" [class.member-avatar-voted]="member.hasVoted">
+                    {{ member.username.charAt(0).toUpperCase() }}
+                  </div>
+                  <div class="min-w-0">
+                    <div class="member-name">
+                      {{ member.username }}
+                      @if (member.isHost) {
+                        <span class="host-badge">👑</span>
+                      }
+                      @if (member.userId === currentUserId()) {
+                        <span class="you-badge">(you)</span>
+                      }
+                    </div>
+                    @if (phase() === 'voting') {
+                      <div class="member-status" [class.voted]="member.hasVoted">
+                        {{ member.hasVoted ? '✓ Voted' : 'Thinking...' }}
+                      </div>
+                    }
+                  </div>
+                </div>
+                @if (isHost() && member.userId !== currentUserId()) {
+                  <button
+                    (click)="kickMember(member.userId)"
+                    class="kick-btn"
+                    [attr.aria-label]="'Kick ' + member.username"
+                    title="Kick"
+                  >
+                    ✕
+                  </button>
+                }
+              </li>
+            }
+          </ul>
+        </aside>
+      </div>
     </div>
-</div>
+  </div>
 } @else {
-<div class="min-h-screen flex items-center justify-center">
+  <div class="min-h-screen flex items-center justify-center">
     <div class="text-[var(--color-text-muted)]">Loading room...</div>
-</div>
+  </div>
 }
