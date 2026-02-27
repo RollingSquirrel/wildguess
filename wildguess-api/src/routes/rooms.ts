@@ -2,8 +2,9 @@ import { Hono } from 'hono';
 import { db } from '../database/drizzle.config.js';
 import { rooms, roomMembers, users, votes } from '../database/schema.js';
 import { eq, and } from 'drizzle-orm';
-import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
 import { authMiddleware } from '../middleware/auth.js';
+import { hashPassword, verifyPassword } from '../utils/password.js';
 import type { AppEnv } from '../types.js';
 
 const roomRoutes = new Hono<AppEnv>();
@@ -12,19 +13,6 @@ roomRoutes.use('*', authMiddleware);
 
 function generateRoomCode(): string {
   return randomBytes(3).toString('hex').toUpperCase();
-}
-
-function hashPassword(password: string): string {
-  const salt = randomBytes(16).toString('hex');
-  const hash = scryptSync(password, salt, 64).toString('hex');
-  return `${salt}:${hash}`;
-}
-
-function verifyPassword(password: string, stored: string): boolean {
-  const [salt, hash] = stored.split(':');
-  const buf = Buffer.from(hash, 'hex');
-  const attempt = scryptSync(password, salt, 64);
-  return timingSafeEqual(buf, attempt);
 }
 
 // POST /api/rooms - Create a room
