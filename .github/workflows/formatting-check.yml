@@ -1,0 +1,51 @@
+name: Formatting Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  format-wildguess:
+    name: Format Check (wildguess)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: wildguess
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run format check
+        run: pnpm run format:check
+
+  format-wildguess-api:
+    name: Format Check (wildguess-api)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: wildguess-api
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run format check
+        run: pnpm run format:check
