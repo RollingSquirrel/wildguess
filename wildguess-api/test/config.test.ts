@@ -18,7 +18,7 @@ describe("Config Routes (/api/config)", () => {
       const res = await app.request("/api/config", { method: "GET" });
       expect(res.status).toBe(200);
       const data = await res.json();
-      expect(data).toEqual({ pollingRate: 2000 });
+      expect(data).toEqual({ pollingRate: 3000 });
     });
 
     it("should return the configured polling rate if POLLING_RATE_MS is set", async () => {

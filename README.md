@@ -12,7 +12,7 @@ Wildguess respects limitations of hosting behind reverse proxies and load balanc
 | `PORT`            | api           | `3000`            | API listen port                           |
 | `DB_PATH`         | api           | `/data/sqlite.db` | SQLite database file path                 |
 | `CORS_ORIGIN`     | api           | `*`               | Allowed origins (comma-separated or `*`)  |
-| `POLLING_RATE_MS` | api           | `2000`            | Frontend polling interval in milliseconds |
+| `POLLING_RATE_MS` | api           | `3000`            | Frontend polling interval in milliseconds |
 | `BASE_URL`        | client, nginx | `/`               | Sub-path for hosting (e.g. `/wildguess/`) |
 | `API_HOST`        | nginx         | `api`             | Hostname/IP of the API container          |
 | `API_PORT`        | nginx         | `3000`            | Port of the API container                 |

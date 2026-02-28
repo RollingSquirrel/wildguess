@@ -277,7 +277,7 @@
                 @if (isHost() && member.userId !== currentUserId()) {
                   <button
                     (click)="kickMember(member.userId)"
-                    class="btn-kick"
+                    class="kick-btn"
                     [attr.aria-label]="'Kick ' + member.username"
                     title="Kick member"
                     [disabled]="isUpdating()"
