@@ -12,19 +12,32 @@ import { AuthService } from '../../services/auth.service';
 import { RoomService } from '../../services/room.service';
 import type { RoomSummary, DiscoverRoom } from '../../models/api.models';
 import { Subscription, interval, switchMap, startWith } from 'rxjs';
+import { BadgeComponent, asBadgeVariant } from '../../ui/badge/badge';
+import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
+import { ModalComponent } from '../../ui/modal/modal';
+import { ButtonDirective } from '../../ui/button/button';
+import { InputDirective } from '../../ui/input/input';
 
 @Component({
   selector: 'app-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    BadgeComponent,
+    ErrorBannerComponent,
+    ModalComponent,
+    ButtonDirective,
+    InputDirective,
+  ],
   templateUrl: './dashboard.page.html',
-  styleUrl: './dashboard.page.css',
 })
 export class DashboardPage implements OnInit, OnDestroy {
   readonly auth = inject(AuthService);
   private readonly roomService = inject(RoomService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+
+  protected readonly asBadgeVariant = asBadgeVariant;
 
   readonly myRooms = signal<RoomSummary[]>([]);
   readonly allRooms = signal<DiscoverRoom[]>([]);

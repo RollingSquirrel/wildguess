@@ -1,25 +1,29 @@
 @if (roomState(); as room) {
   <div class="min-h-screen flex flex-col">
     <!-- Header -->
-    <header class="room-header">
+    <header class="bg-bg-secondary border-b border-border">
       <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
         <div class="flex items-center gap-4">
           <h1 class="text-lg font-bold truncate">{{ room.name }}</h1>
           <button
             (click)="copyRoomCode()"
-            class="room-code"
+            class="font-mono text-xs bg-bg-primary border border-border text-text-secondary py-0.5 px-2.5 rounded-md cursor-pointer transition-all duration-150 hover:border-primary hover:text-primary"
             [attr.aria-label]="'Copy room code ' + room.id"
             title="Click to copy"
           >
             {{ room.id }}
           </button>
-          <span class="phase-indicator" [class]="'phase-' + room.phase">
-            {{ room.phase }}
-          </span>
+          <wg-badge [variant]="asBadgeVariant('phase-' + room.phase)">{{ room.phase }}</wg-badge>
         </div>
         <div class="flex items-center gap-3">
           <span class="text-text-secondary text-sm">Round {{ room.round }}</span>
-          <button (click)="leaveRoom()" class="btn-danger-ghost text-sm" aria-label="Leave room">
+          <button
+            wgButton
+            variant="danger-ghost"
+            (click)="leaveRoom()"
+            class="text-sm"
+            aria-label="Leave room"
+          >
             Leave
           </button>
         </div>
@@ -27,7 +31,7 @@
 
       <!-- Topic bar -->
       @if (room.currentTopic) {
-        <div class="topic-bar">
+        <div class="py-2 bg-bg-primary border-b border-border">
           <div class="max-w-6xl mx-auto px-4">
             <span class="text-text-muted text-xs uppercase tracking-wider mr-2">Topic</span>
             <span class="text-text-primary text-sm">{{ room.currentTopic }}</span>
@@ -38,30 +42,33 @@
 
     <!-- Main content -->
     <div class="flex-1 max-w-6xl mx-auto w-full px-4 py-6">
-      <div class="room-layout">
+      <div class="grid gap-6 grid-cols-1 md:grid-cols-[1fr_220px]">
         <!-- Main area -->
         <div class="main-area">
           @if (error()) {
-            <div class="error-banner" role="alert">{{ error() }}</div>
+            <wg-error-banner>{{ error() }}</wg-error-banner>
           }
 
           <!-- Host controls -->
           @if (isHost()) {
-            <div class="host-controls">
+            <div class="bg-bg-surface border border-border rounded-xl p-4 mb-6">
               @if (phase() === 'voting') {
                 <form [formGroup]="topicForm" (ngSubmit)="setTopic()" class="flex gap-2 mb-3">
                   <input
                     id="topic-input"
                     type="text"
                     formControlName="topic"
-                    class="input-sm flex-1"
+                    wgInput
+                    variant="sm"
+                    class="flex-1"
                     placeholder="Set topic for this round..."
                     aria-label="Topic for this round"
                   />
                   <button
+                    wgButton
+                    variant="sm"
                     type="submit"
                     [disabled]="topicForm.invalid || isUpdating()"
-                    class="btn-sm"
                   >
                     Set
                   </button>
@@ -69,8 +76,12 @@
 
                 <button
                   (click)="reveal()"
-                  class="btn-action relative overflow-hidden group"
-                  [class.btn-action-ready]="allVoted()"
+                  [class]="
+                    'w-full py-3 border-none rounded-[10px] font-semibold text-[0.9rem] cursor-pointer transition-all duration-300 relative overflow-hidden disabled:opacity-40 disabled:cursor-not-allowed ' +
+                    (allVoted()
+                      ? 'bg-primary text-bg-primary animate-pulse-glow hover:shadow-[0_0_30px_var(--color-primary-glow)]'
+                      : 'bg-bg-surface-hover text-text-secondary')
+                  "
                   [disabled]="isUpdating()"
                 >
                   @if (!allVoted() && votingProgressPercent() > 0) {
@@ -92,7 +103,7 @@
               @if (phase() === 'revealed') {
                 <button
                   (click)="triggerVersus()"
-                  class="btn-action btn-versus"
+                  class="w-full py-3 border-none rounded-[10px] font-semibold text-[0.9rem] cursor-pointer transition-all duration-300 text-[#1a1a2e] bg-[linear-gradient(135deg,#ff6b35,#ffaa00)] hover:shadow-[0_0_30px_rgba(255,170,0,0.3)] disabled:opacity-40 disabled:cursor-not-allowed"
                   [disabled]="isUpdating()"
                 >
                   ⚔️ Versus Mode
@@ -100,7 +111,11 @@
               }
 
               @if (phase() === 'versus') {
-                <button (click)="nextRound()" class="btn-action btn-next" [disabled]="isUpdating()">
+                <button
+                  (click)="nextRound()"
+                  class="w-full py-3 border-none rounded-[10px] font-semibold text-[0.9rem] cursor-pointer transition-all duration-300 bg-primary text-bg-primary hover:shadow-[0_0_30px_var(--color-primary-glow)] disabled:opacity-40 disabled:cursor-not-allowed"
+                  [disabled]="isUpdating()"
+                >
                   🔄 Next Round
                 </button>
               }
@@ -109,20 +124,16 @@
 
           <!-- VOTING PHASE -->
           @if (phase() === 'voting') {
-            <div class="voting-section" [class.phase-enter]="phaseAnimating()">
-              <h2 class="section-title">Cast Your Vote</h2>
-              <div class="card-grid">
+            <div class="animate-slide-up-slow" [class.animate-phase-enter]="phaseAnimating()">
+              <h2 class="text-lg font-semibold text-text-secondary mb-5">Cast Your Vote</h2>
+              <div class="grid gap-2.5 grid-cols-[repeat(auto-fill,minmax(72px,1fr))]">
                 @for (value of fibValues; track value) {
-                  <button
-                    (click)="selectVote(value)"
-                    class="vote-card"
-                    [class.vote-card-selected]="selectedVote() === value"
-                    [attr.aria-label]="'Vote ' + value"
-                    [attr.aria-pressed]="selectedVote() === value"
+                  <app-vote-card
+                    [value]="value"
+                    [selected]="selectedVote() === value"
                     [disabled]="isUpdating()"
-                  >
-                    <span class="vote-value">{{ value }}</span>
-                  </button>
+                    (clicked)="selectVote(value)"
+                  />
                 }
               </div>
             </div>
@@ -130,26 +141,42 @@
 
           <!-- REVEALED PHASE -->
           @if (phase() === 'revealed') {
-            <div class="revealed-section" [class.phase-enter]="phaseAnimating()">
-              <h2 class="section-title">Results</h2>
+            <div class="animate-slide-up-slow" [class.animate-phase-enter]="phaseAnimating()">
+              <h2 class="text-lg font-semibold text-text-secondary mb-5">Results</h2>
 
-              <div class="results-layout">
+              <div class="flex gap-6 items-start max-[600px]:flex-col">
                 <!-- Left: Results table + stats -->
-                <div class="results-main">
+                <div class="flex-1 min-w-0">
                   <!-- Results table -->
-                  <div class="results-table">
+                  <div class="flex flex-col gap-1.5 mb-5">
                     @for (member of members(); track member.userId; let i = $index) {
-                      <div class="result-row" [style.animation-delay.ms]="i * 80">
-                        <div class="result-avatar">
+                      <div
+                        class="flex items-center gap-2.5 bg-bg-surface border border-border rounded-[10px] py-2.5 px-3.5 animate-result-slide-in"
+                        [style.animation-delay.ms]="i * 80"
+                      >
+                        <div
+                          class="size-[30px] rounded-full bg-bg-primary border-2 border-primary flex items-center justify-center text-xs font-bold text-primary shrink-0"
+                        >
                           {{ member.username.charAt(0).toUpperCase() }}
                         </div>
-                        <div class="result-name">{{ member.username }}</div>
-                        <div class="result-vote-value">{{ member.vote ?? '–' }}</div>
+                        <div
+                          class="flex-1 text-[0.85rem] font-medium text-text-primary truncate min-w-0"
+                        >
+                          {{ member.username }}
+                        </div>
+                        <div
+                          class="text-xl font-extrabold text-primary min-w-10 text-center shrink-0"
+                        >
+                          {{ member.vote ?? '–' }}
+                        </div>
                         @if (stats() && member.vote && member.vote !== '?') {
-                          <div class="result-bar-track">
+                          <div
+                            class="flex-1 h-1.5 bg-bg-primary rounded-sm overflow-hidden min-w-10 max-w-30"
+                          >
                             <div
-                              class="result-bar-fill"
+                              class="h-full rounded-sm bg-[linear-gradient(90deg,var(--color-primary),var(--color-primary-dim))] shadow-[0_0_6px_var(--color-primary-glow)]"
                               [style.width.%]="(+member.vote / stats()!.max) * 100"
+                              [style.transition]="'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)'"
                             ></div>
                           </div>
                         }
@@ -159,22 +186,50 @@
 
                   <!-- Large readable stats -->
                   @if (stats(); as s) {
-                    <div class="stats-row">
-                      <div class="stat-pill">
-                        <span class="stat-num">{{ s.average }}</span>
-                        <span class="stat-lbl">Avg</span>
+                    <div class="flex gap-2 flex-wrap">
+                      <div
+                        class="flex-1 min-w-[70px] bg-bg-surface border border-border rounded-[10px] py-3 px-2 text-center animate-slide-up-slow [animation-fill-mode:both]"
+                      >
+                        <span class="block text-2xl font-extrabold text-primary leading-tight">{{
+                          s.average
+                        }}</span>
+                        <span
+                          class="block text-[0.65rem] font-semibold text-text-muted uppercase tracking-wide mt-0.5"
+                          >Avg</span
+                        >
                       </div>
-                      <div class="stat-pill">
-                        <span class="stat-num">{{ s.median }}</span>
-                        <span class="stat-lbl">Median</span>
+                      <div
+                        class="flex-1 min-w-[70px] bg-bg-surface border border-border rounded-[10px] py-3 px-2 text-center animate-slide-up-slow [animation-fill-mode:both]"
+                      >
+                        <span class="block text-2xl font-extrabold text-primary leading-tight">{{
+                          s.median
+                        }}</span>
+                        <span
+                          class="block text-[0.65rem] font-semibold text-text-muted uppercase tracking-wide mt-0.5"
+                          >Median</span
+                        >
                       </div>
-                      <div class="stat-pill stat-pill-accent">
-                        <span class="stat-num">{{ s.min }}</span>
-                        <span class="stat-lbl">Min</span>
+                      <div
+                        class="flex-1 min-w-[70px] bg-bg-surface border-[rgba(0,230,118,0.2)] border rounded-[10px] py-3 px-2 text-center animate-slide-up-slow [animation-fill-mode:both]"
+                      >
+                        <span class="block text-2xl font-extrabold text-primary leading-tight">{{
+                          s.min
+                        }}</span>
+                        <span
+                          class="block text-[0.65rem] font-semibold text-text-muted uppercase tracking-wide mt-0.5"
+                          >Min</span
+                        >
                       </div>
-                      <div class="stat-pill stat-pill-accent">
-                        <span class="stat-num">{{ s.max }}</span>
-                        <span class="stat-lbl">Max</span>
+                      <div
+                        class="flex-1 min-w-[70px] bg-bg-surface border-[rgba(0,230,118,0.2)] border rounded-[10px] py-3 px-2 text-center animate-slide-up-slow [animation-fill-mode:both]"
+                      >
+                        <span class="block text-2xl font-extrabold text-primary leading-tight">{{
+                          s.max
+                        }}</span>
+                        <span
+                          class="block text-[0.65rem] font-semibold text-text-muted uppercase tracking-wide mt-0.5"
+                          >Max</span
+                        >
                       </div>
                     </div>
                   }
@@ -182,7 +237,7 @@
 
                 <!-- Right: Donut chart -->
                 @if (stats(); as s) {
-                  <div class="results-chart">
+                  <div class="shrink-0 pt-2 max-[600px]:self-center">
                     <app-donut-chart [distribution]="s.distribution" [totalVotes]="s.totalVotes" />
                   </div>
                 }
@@ -192,34 +247,51 @@
 
           <!-- VERSUS PHASE -->
           @if (phase() === 'versus') {
-            <div class="versus-section" [class.phase-enter]="phaseAnimating()">
+            <div class="animate-slide-up-slow" [class.animate-phase-enter]="phaseAnimating()">
               @if (versus(); as v) {
-                <div class="versus-arena">
+                <div
+                  class="flex items-center justify-center gap-6 py-8 flex-wrap animate-versus-enter"
+                >
                   <!-- Low voter -->
-                  <div class="versus-fighter versus-low">
-                    <div class="fighter-card">
-                      <div class="fighter-vote">{{ v.low.vote }}</div>
+                  <div class="text-center flex-1 max-w-[180px] min-w-[100px]">
+                    <div
+                      class="w-[100px] h-[140px] mx-auto mb-3 flex items-center justify-center rounded-2xl border-2 relative border-info animate-fighter-pulse bg-[linear-gradient(135deg,rgba(64,196,255,0.1),rgba(64,196,255,0.02))] shadow-[0_0_30px_rgba(64,196,255,0.15)]"
+                    >
+                      <div class="text-4xl font-extrabold text-info">{{ v.low.vote }}</div>
                     </div>
-                    <div class="fighter-name">{{ v.low.username }}</div>
-                    <div class="fighter-label">Lower Estimate</div>
+                    <div class="text-[0.9rem] font-semibold text-text-primary mb-1">
+                      {{ v.low.username }}
+                    </div>
+                    <div class="text-[0.65rem] text-text-muted uppercase tracking-wide">
+                      Lower Estimate
+                    </div>
                   </div>
 
                   <!-- VS badge -->
-                  <div class="vs-badge">
-                    <span class="vs-text">VS</span>
+                  <div
+                    class="shrink-0 size-[60px] flex items-center justify-center rounded-full animate-vs-pulse bg-[linear-gradient(135deg,var(--color-danger),#ff6b35)] shadow-[0_0_30px_rgba(255,77,106,0.3)]"
+                  >
+                    <span class="text-xl font-black text-white tracking-widest">VS</span>
                   </div>
 
                   <!-- High voter -->
-                  <div class="versus-fighter versus-high">
-                    <div class="fighter-card">
-                      <div class="fighter-vote">{{ v.high.vote }}</div>
+                  <div class="text-center flex-1 max-w-[180px] min-w-[100px]">
+                    <div
+                      class="w-[100px] h-[140px] mx-auto mb-3 flex items-center justify-center rounded-2xl border-2 relative border-warning bg-[linear-gradient(135deg,rgba(255,170,0,0.1),rgba(255,170,0,0.02))] shadow-[0_0_30px_rgba(255,170,0,0.15)]"
+                      [style.animation]="'fighter-pulse 2s infinite alternate 0.5s'"
+                    >
+                      <div class="text-4xl font-extrabold text-warning">{{ v.high.vote }}</div>
                     </div>
-                    <div class="fighter-name">{{ v.high.username }}</div>
-                    <div class="fighter-label">Higher Estimate</div>
+                    <div class="text-[0.9rem] font-semibold text-text-primary mb-1">
+                      {{ v.high.username }}
+                    </div>
+                    <div class="text-[0.65rem] text-text-muted uppercase tracking-wide">
+                      Higher Estimate
+                    </div>
                   </div>
                 </div>
 
-                <p class="versus-prompt">
+                <p class="text-center text-text-secondary text-[0.85rem] mt-4 opacity-80 w-full">
                   Time for discussion! The most extreme voters explain their reasoning.
                 </p>
               } @else {
@@ -230,14 +302,28 @@
 
               <!-- Stats still visible -->
               @if (stats(); as s) {
-                <div class="stats-row mt-8 mx-auto max-w-sm">
-                  <div class="stat-pill">
-                    <span class="stat-num">{{ s.average }}</span>
-                    <span class="stat-lbl">Avg</span>
+                <div class="flex gap-2 flex-wrap mt-8 mx-auto max-w-sm">
+                  <div
+                    class="flex-1 min-w-[70px] bg-bg-surface border border-border rounded-[10px] py-3 px-2 text-center animate-slide-up-slow [animation-fill-mode:both]"
+                  >
+                    <span class="block text-2xl font-extrabold text-primary leading-tight">{{
+                      s.average
+                    }}</span>
+                    <span
+                      class="block text-[0.65rem] font-semibold text-text-muted uppercase tracking-wide mt-0.5"
+                      >Avg</span
+                    >
                   </div>
-                  <div class="stat-pill">
-                    <span class="stat-num">{{ s.median }}</span>
-                    <span class="stat-lbl">Median</span>
+                  <div
+                    class="flex-1 min-w-[70px] bg-bg-surface border border-border rounded-[10px] py-3 px-2 text-center animate-slide-up-slow [animation-fill-mode:both]"
+                  >
+                    <span class="block text-2xl font-extrabold text-primary leading-tight">{{
+                      s.median
+                    }}</span>
+                    <span
+                      class="block text-[0.65rem] font-semibold text-text-muted uppercase tracking-wide mt-0.5"
+                      >Median</span
+                    >
                   </div>
                 </div>
               }
@@ -246,29 +332,47 @@
         </div>
 
         <!-- Sidebar: Members -->
-        <aside class="members-panel" aria-label="Room members">
+        <aside
+          class="bg-bg-surface border border-border rounded-xl p-4 h-fit sticky top-4"
+          aria-label="Room members"
+        >
           <h2 class="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-3">
             Members ({{ members().length }})
           </h2>
-          <ul class="member-list">
+          <ul class="list-none m-0 p-0 flex flex-col gap-2">
             @for (member of members(); track member.userId) {
-              <li class="member-item">
+              <li
+                class="flex items-center justify-between p-2 rounded-lg transition-colors duration-150 hover:bg-bg-surface-hover"
+              >
                 <div class="flex items-center gap-2 min-w-0">
-                  <div class="member-avatar" [class.member-avatar-voted]="member.hasVoted">
+                  <div
+                    class="size-8 rounded-full bg-bg-primary border-2 flex items-center justify-center text-[0.8rem] font-bold shrink-0 transition-all duration-300"
+                    [class.border-border]="!member.hasVoted"
+                    [class.text-text-secondary]="!member.hasVoted"
+                    [class.border-primary]="member.hasVoted"
+                    [class.text-primary]="member.hasVoted"
+                    [style.box-shadow]="
+                      member.hasVoted ? '0 0 8px var(--color-primary-glow)' : null
+                    "
+                  >
                     {{ member.username.charAt(0).toUpperCase() }}
                   </div>
                   <div class="min-w-0">
-                    <div class="member-name">
+                    <div class="text-[0.85rem] font-medium text-text-primary truncate">
                       {{ member.username }}
                       @if (member.isHost) {
-                        <span class="host-badge">👑</span>
+                        <span aria-label="Host" title="Host">👑</span>
                       }
                       @if (member.userId === currentUserId()) {
-                        <span class="you-badge">(you)</span>
+                        <span class="ml-1 text-[0.7rem] font-normal text-text-muted">(you)</span>
                       }
                     </div>
                     @if (phase() === 'voting') {
-                      <div class="member-status" [class.voted]="member.hasVoted">
+                      <div
+                        class="text-[0.7rem]"
+                        [class.text-text-muted]="!member.hasVoted"
+                        [class.text-primary]="member.hasVoted"
+                      >
                         {{ member.hasVoted ? '✓ Voted' : 'Thinking...' }}
                       </div>
                     }
@@ -277,7 +381,7 @@
                 @if (isHost() && member.userId !== currentUserId()) {
                   <button
                     (click)="kickMember(member.userId)"
-                    class="kick-btn"
+                    class="size-6 flex items-center justify-center border-none bg-transparent text-text-muted rounded-md text-xs cursor-pointer shrink-0 transition-all duration-150 hover:bg-danger-subtle hover:text-danger"
                     [attr.aria-label]="'Kick ' + member.username"
                     title="Kick member"
                     [disabled]="isUpdating()"

@@ -1,80 +1,71 @@
-/* Global styles for Wildguess - Dark Developer Theme */
+/* ==========================================================================
+   Wildguess — Global Styles (Dark Developer Theme)
+   Built on Tailwind CSS v4. All design tokens live in @theme.
+   Reusable component classes use @layer components with Tailwind utilities.
+   Custom CSS is ONLY used when Tailwind cannot express the style.
+   ========================================================================== */
 @import 'tailwindcss';
 
+/* --------------------------------------------------------------------------
+   1. THEME — Design Tokens
+   All colors, fonts, spacing, radius, shadows, and animations are defined
+   here so Tailwind utility classes are generated automatically.
+   Example: --color-primary  →  bg-primary, text-primary, border-primary
+   -------------------------------------------------------------------------- */
 @theme {
+  /* — Backgrounds — */
   --color-bg-primary: #0a0e14;
   --color-bg-secondary: #111820;
   --color-bg-surface: #1a2332;
   --color-bg-surface-hover: #222e3f;
   --color-bg-card: #151d29;
 
+  /* — Brand / Accent — */
   --color-primary: #00e676;
   --color-primary-dim: #00c863;
   --color-primary-glow: rgba(0, 230, 118, 0.3);
   --color-primary-subtle: rgba(0, 230, 118, 0.08);
 
+  /* — Text — */
   --color-text-primary: #e8edf4;
   --color-text-secondary: #8899aa;
   --color-text-muted: #556677;
 
+  /* — Borders — */
   --color-border: #1e2a3a;
   --color-border-hover: #2a3a4e;
 
+  /* — Semantic — */
   --color-danger: #ff4d6a;
+  --color-danger-subtle: rgba(255, 77, 106, 0.1);
   --color-warning: #ffaa00;
+  --color-warning-subtle: rgba(255, 170, 0, 0.1);
   --color-info: #40c4ff;
+  --color-info-subtle: rgba(64, 196, 255, 0.1);
 
+  /* — Typography — */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* — Animation durations — */
+  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-slide-up-slow: slide-up 0.5s ease-out;
+  --animate-slide-up-entry: slide-up 0.6s ease-out;
+  --animate-pulse-glow: pulse-glow 2s infinite;
+  --animate-phase-enter: phase-enter 0.6s ease-out;
+  --animate-result-slide-in: result-slide-in 0.4s ease-out both;
+  --animate-versus-enter: versus-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fighter-pulse: fighter-pulse 2s infinite alternate;
+  --animate-vs-pulse: vs-pulse 1.5s infinite alternate;
+  --animate-shimmer: shimmer 2s infinite;
+  --animate-room-card-entry: room-card-entry 0.4s ease-out both;
 }
 
-/* Base */
-html {
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-bg-secondary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-bg-surface-hover);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted);
-}
-
-/* Focus styles */
-*:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-/* Global button reset */
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
-
-/* Animations */
-@keyframes fadeIn {
+/* --------------------------------------------------------------------------
+   2. KEYFRAMES — Animation definitions
+   These are referenced by --animate-* tokens above.
+   -------------------------------------------------------------------------- */
+@keyframes fade-in {
   from {
     opacity: 0;
   }
@@ -83,7 +74,7 @@ button {
   }
 }
 
-@keyframes slideUp {
+@keyframes slide-up {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -113,4 +104,132 @@ button {
   100% {
     background-position: 200% 0;
   }
+}
+
+@keyframes phase-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes result-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes versus-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fighter-pulse {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  }
+  100% {
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+  }
+}
+
+@keyframes vs-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(255, 77, 106, 0.2);
+  }
+  100% {
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(255, 77, 106, 0.4);
+  }
+}
+
+@keyframes room-card-entry {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. BASE — Global resets & defaults
+   Only styles that CANNOT be expressed as Tailwind utilities belong here.
+   -------------------------------------------------------------------------- */
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar — non-standard, must be raw CSS */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-surface-hover);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Global focus ring */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Reset inherited font on buttons */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   4. COMPONENT LAYER — Reusable cross-page UI components 
+   that can be overriden by Tailwind utility classes 
+   -------------------------------------------------------------------------- */
+@layer components {
+  /* empty for now, or you can add new cross-page components here */
+}
+
+/* --------------------------------------------------------------------------
+   5. CUSTOM UTILITIES — Tailwind @utility for one-off utility classes
+   -------------------------------------------------------------------------- */
+@utility animate-slide-up {
+  animation: slide-up 0.3s ease-out;
 }
