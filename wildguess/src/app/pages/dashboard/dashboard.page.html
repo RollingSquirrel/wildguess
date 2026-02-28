@@ -57,30 +57,28 @@
 
     <!-- Password Join Dialog (modal overlay) -->
     @if (joiningRoomId()) {
-      <div class="modal-backdrop" (click)="cancelPasswordJoin()">
-        <div class="modal-card" (click)="$event.stopPropagation()">
-          <h2 class="text-lg font-semibold mb-2">🔒 Password Required</h2>
-          <p class="text-text-secondary text-[0.85rem] mb-2">
-            This room is password-protected. Enter the password to join.
-          </p>
-          @if (joinError()) {
-            <wg-error-banner size="sm">{{ joinError() }}</wg-error-banner>
-          }
-          <div class="flex gap-3 mt-4">
-            <input
-              type="password"
-              class="input-field flex-1"
-              placeholder="Enter password"
-              aria-label="Room password"
-              [value]="joinPassword()"
-              (input)="joinPassword.set($any($event.target).value)"
-              (keydown.enter)="submitPasswordJoin()"
-            />
-            <button (click)="submitPasswordJoin()" class="btn-primary">Join</button>
-          </div>
-          <button (click)="cancelPasswordJoin()" class="btn-cancel mt-3">Cancel</button>
+      <wg-modal (closed)="cancelPasswordJoin()">
+        <h2 class="text-lg font-semibold mb-2">🔒 Password Required</h2>
+        <p class="text-text-secondary text-[0.85rem] mb-2">
+          This room is password-protected. Enter the password to join.
+        </p>
+        @if (joinError()) {
+          <wg-error-banner size="sm">{{ joinError() }}</wg-error-banner>
+        }
+        <div class="flex gap-3 mt-4">
+          <input
+            type="password"
+            class="input-field flex-1"
+            placeholder="Enter password"
+            aria-label="Room password"
+            [value]="joinPassword()"
+            (input)="joinPassword.set($any($event.target).value)"
+            (keydown.enter)="submitPasswordJoin()"
+          />
+          <button (click)="submitPasswordJoin()" class="btn-primary">Join</button>
         </div>
-      </div>
+        <button (click)="cancelPasswordJoin()" class="btn-cancel mt-3">Cancel</button>
+      </wg-modal>
     }
 
     <!-- Tabs -->

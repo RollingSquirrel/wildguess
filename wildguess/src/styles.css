@@ -230,16 +230,6 @@ button { font-family: inherit; cursor: pointer; }
   }
 
 
-  /* ---- Modals ---- */
-  .modal-backdrop {
-    @apply fixed inset-0 bg-black/60 backdrop-blur-xs
-           flex items-center justify-center z-100 animate-fade-in;
-  }
-  .modal-card {
-    @apply bg-bg-surface border border-border rounded-2xl p-8
-           max-w-[400px] w-[90%] animate-slide-up;
-  }
-
 
 }
 
