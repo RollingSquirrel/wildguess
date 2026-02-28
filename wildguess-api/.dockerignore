@@ -28,6 +28,3 @@ logs/
 # OS files
 .DS_Store
 Thumbs.db
-
-# Drizzle migrations (generated, not needed at runtime)
-drizzle/
