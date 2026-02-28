@@ -21,6 +21,7 @@ import { BadgeComponent, asBadgeVariant } from '../../ui/badge/badge';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, DonutChartComponent, BadgeComponent],
   templateUrl: './room.page.html',
+  styleUrl: './room.page.css',
 })
 export class RoomPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
