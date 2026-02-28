@@ -66,54 +66,111 @@
    These are referenced by --animate-* tokens above.
    -------------------------------------------------------------------------- */
 @keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px var(--color-primary-glow); }
-  50%      { box-shadow: 0 0 20px var(--color-primary-glow), 0 0 40px rgba(0, 230, 118, 0.1); }
+  0%,
+  100% {
+    box-shadow: 0 0 5px var(--color-primary-glow);
+  }
+  50% {
+    box-shadow:
+      0 0 20px var(--color-primary-glow),
+      0 0 40px rgba(0, 230, 118, 0.1);
+  }
 }
 
 @keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 @keyframes phase-enter {
-  0%   { opacity: 0; transform: scale(0.95) translateY(10px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 @keyframes result-slide-in {
-  from { opacity: 0; transform: translateX(-12px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes versus-enter {
-  0%   { opacity: 0; transform: scale(0.8); }
-  50%  { transform: scale(1.05); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes fighter-pulse {
-  0%   { box-shadow: 0 0 20px rgba(255, 255, 255, 0.05); }
-  100% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.1); }
+  0% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  }
+  100% {
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+  }
 }
 
 @keyframes vs-pulse {
-  0%   { transform: scale(1);   box-shadow: 0 0 20px rgba(255, 77, 106, 0.2); }
-  100% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 77, 106, 0.4); }
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(255, 77, 106, 0.2);
+  }
+  100% {
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(255, 77, 106, 0.4);
+  }
 }
 
 @keyframes room-card-entry {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -136,10 +193,19 @@ body {
 }
 
 /* Scrollbar — non-standard, must be raw CSS */
-::-webkit-scrollbar       { width: 6px; }
-::-webkit-scrollbar-track  { background: var(--color-bg-secondary); }
-::-webkit-scrollbar-thumb  { background: var(--color-bg-surface-hover); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-surface-hover);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
 
 /* Global focus ring */
 *:focus-visible {
@@ -148,18 +214,17 @@ body {
 }
 
 /* Reset inherited font on buttons */
-button { font-family: inherit; cursor: pointer; }
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
 
 /* --------------------------------------------------------------------------
-   4. COMPONENT LAYER — Reusable cross-page UI components
+   4. COMPONENT LAYER — Reusable cross-page UI components 
+   that can be overriden by Tailwind utility classes 
    -------------------------------------------------------------------------- */
 @layer components {
-
-  /* ---- Cards / Surfaces ---- */
-  .card {
-    @apply bg-bg-surface border border-border rounded-xl p-6;
-  }
-
+  /* empty for now, or you can add new cross-page components here */
 }
 
 /* --------------------------------------------------------------------------

@@ -22,7 +22,7 @@
     </div>
 
     @if (showCreateForm()) {
-      <div class="card mb-6 animate-slide-up">
+      <div class="bg-bg-surface border border-border rounded-xl p-6 mb-6 animate-slide-up">
         <h2 class="text-lg font-semibold mb-4">Create a New Room</h2>
         <form [formGroup]="createForm" (ngSubmit)="createRoom()">
           <div class="flex gap-3 mb-3">
@@ -118,7 +118,7 @@
     <!-- Browse Rooms Tab -->
     @if (activeTab() === 'browse') {
       @if (allRooms().length === 0) {
-        <div class="card text-center py-12">
+        <div class="bg-bg-surface border border-border rounded-xl p-6 text-center py-12">
           <p class="text-text-muted text-lg mb-1">No rooms available</p>
           <p class="text-text-muted text-[0.85rem]">Create a new room to get started</p>
         </div>
@@ -166,7 +166,7 @@
     <!-- Your Rooms Tab -->
     @if (activeTab() === 'mine') {
       @if (myRooms().length === 0) {
-        <div class="card text-center py-12">
+        <div class="bg-bg-surface border border-border rounded-xl p-6 text-center py-12">
           <p class="text-text-muted text-lg mb-1">You haven't joined any rooms</p>
           <p class="text-text-muted text-[0.85rem]">Browse rooms or create a new one</p>
         </div>
