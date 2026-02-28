@@ -52,7 +52,7 @@
     }
 
     @if (error()) {
-      <div class="error-banner" role="alert">{{ error() }}</div>
+      <wg-error-banner>{{ error() }}</wg-error-banner>
     }
 
     <!-- Password Join Dialog (modal overlay) -->
@@ -64,7 +64,7 @@
             This room is password-protected. Enter the password to join.
           </p>
           @if (joinError()) {
-            <div class="error-banner-sm">{{ joinError() }}</div>
+            <wg-error-banner size="sm">{{ joinError() }}</wg-error-banner>
           }
           <div class="flex gap-3 mt-4">
             <input

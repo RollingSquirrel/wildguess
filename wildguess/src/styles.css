@@ -244,13 +244,6 @@ button { font-family: inherit; cursor: pointer; }
            max-w-[400px] w-[90%] animate-slide-up;
   }
 
-  /* ---- Error banners ---- */
-  .error-banner {
-    @apply bg-danger-subtle text-danger py-3 px-4 rounded-[10px] text-[0.85rem] mb-4;
-  }
-  .error-banner-sm {
-    @apply bg-danger-subtle text-danger py-2 px-3 rounded-lg text-[0.8rem];
-  }
 
 }
 

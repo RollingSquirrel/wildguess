@@ -13,11 +13,12 @@ import { RoomService } from '../../services/room.service';
 import type { RoomSummary, DiscoverRoom } from '../../models/api.models';
 import { Subscription, interval, switchMap, startWith } from 'rxjs';
 import { BadgeComponent, asBadgeVariant } from '../../ui/badge/badge';
+import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
 
 @Component({
   selector: 'app-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, BadgeComponent],
+  imports: [ReactiveFormsModule, BadgeComponent, ErrorBannerComponent],
   templateUrl: './dashboard.page.html',
 })
 export class DashboardPage implements OnInit, OnDestroy {

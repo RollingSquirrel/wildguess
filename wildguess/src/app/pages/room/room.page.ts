@@ -15,13 +15,20 @@ import { RoomService } from '../../services/room.service';
 import { FIBONACCI_VALUES, type RoomState, type RoomPhase } from '../../models/api.models';
 import { DonutChartComponent } from '../../components/donut-chart';
 import { BadgeComponent, asBadgeVariant } from '../../ui/badge/badge';
+import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
+import { VoteCardComponent } from './components/vote-card/vote-card.component';
 
 @Component({
   selector: 'app-room',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, DonutChartComponent, BadgeComponent],
+  imports: [
+    ReactiveFormsModule,
+    DonutChartComponent,
+    BadgeComponent,
+    ErrorBannerComponent,
+    VoteCardComponent,
+  ],
   templateUrl: './room.page.html',
-  styleUrl: './room.page.css',
 })
 export class RoomPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);

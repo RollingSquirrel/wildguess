@@ -35,7 +35,11 @@ Wildguess uses **Tailwind CSS v4** with a custom dark theme. The styling follows
 
 ### Component templates (page-specific)
 
-Page layout, section structure, and one-off styling use Tailwind utilities directly in the HTML template. No separate CSS files per component — component `.ts` files do not have `styleUrl` properties (except for `:host` blocks on wrapper components like `app.ts`).
+Page layout, section structure, and one-off styling use Tailwind utility classes directly in component templates.
+
+**Crucially, there are NO separate `.css` files per page.**
+
+If a style pattern is too complex for inline utilities (e.g., uses pseudo-elements or complex animations), it must be moved to a **reusable UI component** in `src/app/ui/`. These UI components may use localized `styles:` blocks with `@reference` if necessary, but the goal is to keep the application modular and avoid the need for page-level CSS.
 
 ## Design Tokens (`@theme`)
 
@@ -106,30 +110,27 @@ Theme tokens named `--animate-*` → usable as Tailwind classes:
 
 Defined in `@layer components` inside `styles.css`. Use these across any page:
 
-| Class                 | Usage                               |
-| --------------------- | ----------------------------------- |
-| `.input-field`        | Standard full-width input           |
-| `.input-field-sm`     | Compact input (topic bar, etc.)     |
-| `.btn-primary`        | Main CTA (green fill)               |
-| `.btn-sm`             | Small primary button                |
-| `.btn-ghost`          | Text button, danger hover           |
-| `.btn-cancel`         | Bordered cancel button              |
-| `.btn-danger-ghost`   | Outlined danger button              |
-| `.card`               | General content card                |
-| `.auth-card`          | Login/register card with glow       |
-| `.modal-backdrop`     | Fixed overlay with blur             |
-| `.modal-card`         | Centered modal content              |
-| `.error-banner`       | Full error message bar              |
-| `.error-banner-sm`    | Compact error (inline forms)        |
-| `.badge-host`         | Green "HOST" label                  |
-| `.badge-member`       | Blue "JOINED" label                 |
-| `.badge-phase`        | Base phase badge                    |
-| `.badge-voting`       | Blue voting state                   |
-| `.badge-revealed`     | Green revealed state                |
-| `.badge-versus`       | Yellow versus state                 |
-| `.vote-card`          | Poker voting card (pseudo-elements) |
-| `.vote-card-selected` | Selected card state                 |
-| `.vote-value`         | Vote number text inside card        |
+| Class               | Usage                           |
+| ------------------- | ------------------------------- |
+| `.input-field`      | Standard full-width input       |
+| `.input-field-sm`   | Compact input (topic bar, etc.) |
+| `.btn-primary`      | Main CTA (green fill)           |
+| `.btn-sm`           | Small primary button            |
+| `.btn-ghost`        | Text button, danger hover       |
+| `.btn-cancel`       | Bordered cancel button          |
+| `.btn-danger-ghost` | Outlined danger button          |
+| `.card`             | General content card            |
+| `.auth-card`        | Login/register card with glow   |
+| `.modal-backdrop`   | Fixed overlay with blur         |
+| `.modal-card`       | Centered modal content          |
+| `.error-banner`     | Full error message bar          |
+| `.error-banner-sm`  | Compact error (inline forms)    |
+| `.badge-host`       | Green "HOST" label              |
+| `.badge-member`     | Blue "JOINED" label             |
+| `.badge-phase`      | Base phase badge                |
+| `.badge-voting`     | Blue voting state               |
+| `.badge-revealed`   | Green revealed state            |
+| `.badge-versus`     | Yellow versus state             |
 
 ## Style Rules for Adding New UI
 

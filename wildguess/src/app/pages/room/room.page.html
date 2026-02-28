@@ -40,7 +40,7 @@
         <!-- Main area -->
         <div class="main-area">
           @if (error()) {
-            <div class="error-banner" role="alert">{{ error() }}</div>
+            <wg-error-banner>{{ error() }}</wg-error-banner>
           }
 
           <!-- Host controls -->
@@ -119,16 +119,12 @@
               <h2 class="text-lg font-semibold text-text-secondary mb-5">Cast Your Vote</h2>
               <div class="grid gap-2.5 grid-cols-[repeat(auto-fill,minmax(72px,1fr))]">
                 @for (value of fibValues; track value) {
-                  <button
-                    (click)="selectVote(value)"
-                    class="vote-card"
-                    [class.vote-card-selected]="selectedVote() === value"
-                    [attr.aria-label]="'Vote ' + value"
-                    [attr.aria-pressed]="selectedVote() === value"
+                  <app-vote-card
+                    [value]="value"
+                    [selected]="selectedVote() === value"
                     [disabled]="isUpdating()"
-                  >
-                    <span class="vote-value">{{ value }}</span>
-                  </button>
+                    (clicked)="selectVote(value)"
+                  />
                 }
               </div>
             </div>
