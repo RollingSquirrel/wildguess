@@ -9,21 +9,17 @@ import { AuthService } from '../../services/auth.service';
   imports: [ReactiveFormsModule, RouterLink],
   template: `
     <div class="min-h-screen flex items-center justify-center p-4">
-      <div class="register-card w-full max-w-md" role="main">
+      <div class="auth-card w-full max-w-md" role="main">
         <div class="text-center mb-8">
           <h1 class="text-4xl font-bold tracking-tight mb-2">
-            <span class="text-[var(--color-primary)]">Wild</span
-            ><span class="text-[var(--color-text-primary)]">guess</span>
+            <span class="text-primary">Wild</span><span class="text-text-primary">guess</span>
           </h1>
-          <p class="text-[var(--color-text-secondary)] text-sm">Create your account</p>
+          <p class="text-text-secondary text-sm">Create your account</p>
         </div>
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
           <div>
-            <label
-              for="reg-username"
-              class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1.5"
-            >
+            <label for="reg-username" class="block text-sm font-medium text-text-secondary mb-1.5">
               Username
             </label>
             <input
@@ -37,10 +33,7 @@ import { AuthService } from '../../services/auth.service';
           </div>
 
           <div>
-            <label
-              for="reg-password"
-              class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1.5"
-            >
+            <label for="reg-password" class="block text-sm font-medium text-text-secondary mb-1.5">
               Password
             </label>
             <input
@@ -54,10 +47,7 @@ import { AuthService } from '../../services/auth.service';
           </div>
 
           @if (error()) {
-            <div
-              class="text-[var(--color-danger)] text-sm bg-[rgba(255,77,106,0.1)] rounded-lg px-4 py-2"
-              role="alert"
-            >
+            <div class="error-banner-sm" role="alert">
               {{ error() }}
             </div>
           }
@@ -70,69 +60,12 @@ import { AuthService } from '../../services/auth.service';
           </button>
         </form>
 
-        <p class="text-center text-[var(--color-text-secondary)] text-sm mt-6">
+        <p class="text-center text-text-secondary text-sm mt-6">
           Already have an account?
-          <a routerLink="/login" class="text-[var(--color-primary)] hover:underline font-medium"
-            >Sign in</a
-          >
+          <a routerLink="/login" class="text-primary hover:underline font-medium">Sign in</a>
         </p>
       </div>
     </div>
-  `,
-  styles: `
-    .register-card {
-      background: var(--color-bg-surface);
-      border: 1px solid var(--color-border);
-      border-radius: 16px;
-      padding: 2.5rem;
-      animation: slideUp 0.6s ease-out;
-      box-shadow: 0 0 60px rgba(0, 230, 118, 0.03);
-    }
-
-    .input-field {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      background: var(--color-bg-primary);
-      border: 1px solid var(--color-border);
-      border-radius: 10px;
-      color: var(--color-text-primary);
-      font-size: 0.95rem;
-      transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
-      box-sizing: border-box;
-    }
-
-    .input-field:focus {
-      outline: none;
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px var(--color-primary-glow);
-    }
-
-    .input-field::placeholder {
-      color: var(--color-text-muted);
-    }
-
-    .btn-primary {
-      padding: 0.75rem 1.5rem;
-      background: var(--color-primary);
-      color: var(--color-bg-primary);
-      font-weight: 600;
-      border-radius: 10px;
-      border: none;
-      font-size: 0.95rem;
-      transition: all 0.2s;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      background: var(--color-primary-dim);
-      box-shadow: 0 0 20px var(--color-primary-glow);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
   `,
 })
 export class RegisterPage {

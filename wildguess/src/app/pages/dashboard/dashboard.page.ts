@@ -18,7 +18,6 @@ import { Subscription, interval, switchMap, startWith } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule],
   templateUrl: './dashboard.page.html',
-  styleUrl: './dashboard.page.css',
 })
 export class DashboardPage implements OnInit, OnDestroy {
   readonly auth = inject(AuthService);

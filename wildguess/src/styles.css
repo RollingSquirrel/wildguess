@@ -1,33 +1,125 @@
-/* Global styles for Wildguess - Dark Developer Theme */
+/* ==========================================================================
+   Wildguess — Global Styles (Dark Developer Theme)
+   Built on Tailwind CSS v4. All design tokens live in @theme.
+   Reusable component classes use @layer components with Tailwind utilities.
+   Custom CSS is ONLY used when Tailwind cannot express the style.
+   ========================================================================== */
 @import 'tailwindcss';
 
+/* --------------------------------------------------------------------------
+   1. THEME — Design Tokens
+   All colors, fonts, spacing, radius, shadows, and animations are defined
+   here so Tailwind utility classes are generated automatically.
+   Example: --color-primary  →  bg-primary, text-primary, border-primary
+   -------------------------------------------------------------------------- */
 @theme {
+  /* — Backgrounds — */
   --color-bg-primary: #0a0e14;
   --color-bg-secondary: #111820;
   --color-bg-surface: #1a2332;
   --color-bg-surface-hover: #222e3f;
   --color-bg-card: #151d29;
 
+  /* — Brand / Accent — */
   --color-primary: #00e676;
   --color-primary-dim: #00c863;
   --color-primary-glow: rgba(0, 230, 118, 0.3);
   --color-primary-subtle: rgba(0, 230, 118, 0.08);
 
+  /* — Text — */
   --color-text-primary: #e8edf4;
   --color-text-secondary: #8899aa;
   --color-text-muted: #556677;
 
+  /* — Borders — */
   --color-border: #1e2a3a;
   --color-border-hover: #2a3a4e;
 
+  /* — Semantic — */
   --color-danger: #ff4d6a;
+  --color-danger-subtle: rgba(255, 77, 106, 0.1);
   --color-warning: #ffaa00;
+  --color-warning-subtle: rgba(255, 170, 0, 0.1);
   --color-info: #40c4ff;
+  --color-info-subtle: rgba(64, 196, 255, 0.1);
 
+  /* — Typography — */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* — Animation durations — */
+  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-slide-up-slow: slide-up 0.5s ease-out;
+  --animate-slide-up-entry: slide-up 0.6s ease-out;
+  --animate-pulse-glow: pulse-glow 2s infinite;
+  --animate-phase-enter: phase-enter 0.6s ease-out;
+  --animate-result-slide-in: result-slide-in 0.4s ease-out both;
+  --animate-versus-enter: versus-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fighter-pulse: fighter-pulse 2s infinite alternate;
+  --animate-vs-pulse: vs-pulse 1.5s infinite alternate;
+  --animate-shimmer: shimmer 2s infinite;
+  --animate-room-card-entry: room-card-entry 0.4s ease-out both;
 }
 
-/* Base */
+/* --------------------------------------------------------------------------
+   2. KEYFRAMES — Animation definitions
+   These are referenced by --animate-* tokens above.
+   -------------------------------------------------------------------------- */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px var(--color-primary-glow); }
+  50%      { box-shadow: 0 0 20px var(--color-primary-glow), 0 0 40px rgba(0, 230, 118, 0.1); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes phase-enter {
+  0%   { opacity: 0; transform: scale(0.95) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes result-slide-in {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes versus-enter {
+  0%   { opacity: 0; transform: scale(0.8); }
+  50%  { transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fighter-pulse {
+  0%   { box-shadow: 0 0 20px rgba(255, 255, 255, 0.05); }
+  100% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.1); }
+}
+
+@keyframes vs-pulse {
+  0%   { transform: scale(1);   box-shadow: 0 0 20px rgba(255, 77, 106, 0.2); }
+  100% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 77, 106, 0.4); }
+}
+
+@keyframes room-card-entry {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --------------------------------------------------------------------------
+   3. BASE — Global resets & defaults
+   Only styles that CANNOT be expressed as Tailwind utilities belong here.
+   -------------------------------------------------------------------------- */
 html {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -43,74 +135,181 @@ body {
   overflow-x: hidden;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 6px;
-}
+/* Scrollbar — non-standard, must be raw CSS */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track  { background: var(--color-bg-secondary); }
+::-webkit-scrollbar-thumb  { background: var(--color-bg-surface-hover); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
 
-::-webkit-scrollbar-track {
-  background: var(--color-bg-secondary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-bg-surface-hover);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted);
-}
-
-/* Focus styles */
+/* Global focus ring */
 *:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-/* Global button reset */
-button {
-  font-family: inherit;
-  cursor: pointer;
+/* Reset inherited font on buttons */
+button { font-family: inherit; cursor: pointer; }
+
+/* --------------------------------------------------------------------------
+   4. COMPONENT LAYER — Reusable cross-page UI components
+   -------------------------------------------------------------------------- */
+@layer components {
+  /* ---- Inputs ---- */
+  .input-field {
+    @apply w-full py-3 px-4 bg-bg-primary border border-border rounded-[10px]
+           text-text-primary text-[0.95rem] box-border
+           transition-[border-color,box-shadow] duration-200;
+  }
+  .input-field:focus {
+    @apply outline-none border-primary shadow-[0_0_0_3px_var(--color-primary-glow)];
+  }
+  .input-field::placeholder {
+    @apply text-text-muted;
+  }
+  .input-field-sm {
+    @apply w-full py-2 px-3 bg-bg-primary border border-border rounded-lg
+           text-text-primary text-[0.85rem] box-border
+           transition-[border-color] duration-200;
+  }
+  .input-field-sm:focus {
+    @apply outline-none border-primary shadow-[0_0_0_2px_var(--color-primary-glow)];
+  }
+  .input-field-sm::placeholder {
+    @apply text-text-muted;
+  }
+
+  /* ---- Buttons ---- */
+  .btn-primary {
+    @apply py-3 px-5 bg-primary text-bg-primary font-semibold rounded-[10px]
+           border-none text-[0.9rem] whitespace-nowrap cursor-pointer
+           transition-all duration-200;
+  }
+  .btn-primary:hover:not(:disabled) {
+    @apply bg-primary-dim shadow-[0_0_20px_var(--color-primary-glow)];
+  }
+  .btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .btn-sm {
+    @apply py-2 px-4 bg-primary text-bg-primary font-semibold rounded-lg
+           border-none text-[0.85rem] whitespace-nowrap
+           transition-all duration-200;
+  }
+  .btn-sm:disabled {
+    @apply opacity-40 cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent border-none text-text-secondary font-medium
+           py-2 px-3 rounded-lg cursor-pointer transition-all duration-150;
+  }
+  .btn-ghost:hover {
+    @apply text-danger bg-danger-subtle;
+  }
+
+  .btn-cancel {
+    @apply w-full bg-transparent border border-border text-text-secondary
+           py-2 rounded-lg cursor-pointer text-[0.85rem] transition-all duration-150;
+  }
+  .btn-cancel:hover {
+    @apply border-text-secondary;
+  }
+
+  .btn-danger-ghost {
+    @apply bg-transparent border border-danger text-danger
+           py-1.5 px-3 rounded-lg font-medium transition-all duration-150;
+  }
+  .btn-danger-ghost:hover {
+    @apply bg-danger-subtle;
+  }
+
+  /* ---- Cards / Surfaces ---- */
+  .card {
+    @apply bg-bg-surface border border-border rounded-xl p-6;
+  }
+
+  .auth-card {
+    @apply bg-bg-surface border border-border rounded-2xl p-10
+           animate-slide-up-entry shadow-[0_0_60px_rgba(0,230,118,0.03)];
+  }
+
+  /* ---- Modals ---- */
+  .modal-backdrop {
+    @apply fixed inset-0 bg-black/60 backdrop-blur-xs
+           flex items-center justify-center z-100 animate-fade-in;
+  }
+  .modal-card {
+    @apply bg-bg-surface border border-border rounded-2xl p-8
+           max-w-[400px] w-[90%] animate-slide-up;
+  }
+
+  /* ---- Error banners ---- */
+  .error-banner {
+    @apply bg-danger-subtle text-danger py-3 px-4 rounded-[10px] text-[0.85rem] mb-4;
+  }
+  .error-banner-sm {
+    @apply bg-danger-subtle text-danger py-2 px-3 rounded-lg text-[0.8rem];
+  }
+
+  /* ---- Badges ---- */
+  .badge-host {
+    @apply text-[0.65rem] font-semibold bg-primary-subtle text-primary
+           py-0.5 px-2 rounded-md uppercase tracking-wide;
+  }
+  .badge-member {
+    @apply text-[0.65rem] font-semibold bg-info-subtle text-info
+           py-0.5 px-2 rounded-md uppercase;
+  }
+  .badge-phase {
+    @apply py-0.5 px-2 rounded-md text-xs font-medium capitalize;
+  }
+  .badge-voting {
+    @apply bg-info-subtle text-info;
+  }
+  .badge-revealed {
+    @apply bg-primary-subtle text-primary;
+  }
+  .badge-versus {
+    @apply bg-warning-subtle text-warning;
+  }
+
+  /* ---- Vote cards (pseudo-elements + parent-child selectors) ---- */
+  .vote-card {
+    @apply relative flex items-center justify-center bg-bg-card
+           border-2 border-border rounded-xl cursor-pointer overflow-hidden;
+    aspect-ratio: 3/4;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .vote-card::before {
+    content: '';
+    @apply absolute inset-0 rounded-[10px] opacity-0 transition-opacity duration-300;
+    background: linear-gradient(135deg, transparent 40%, rgba(0, 230, 118, 0.03));
+  }
+  .vote-card:hover {
+    @apply border-primary;
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 15px var(--color-primary-glow);
+  }
+  .vote-card:hover::before {
+    @apply opacity-100;
+  }
+  .vote-card-selected {
+    @apply border-primary bg-primary-subtle;
+    box-shadow: 0 0 20px var(--color-primary-glow), inset 0 0 20px rgba(0, 230, 118, 0.05);
+    transform: translateY(-6px) scale(1.05);
+  }
+  .vote-value {
+    @apply text-2xl font-bold text-text-primary relative z-1;
+  }
+  .vote-card-selected .vote-value {
+    @apply text-primary;
+  }
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 5px var(--color-primary-glow);
-  }
-  50% {
-    box-shadow:
-      0 0 20px var(--color-primary-glow),
-      0 0 40px rgba(0, 230, 118, 0.1);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+/* --------------------------------------------------------------------------
+   5. CUSTOM UTILITIES — Tailwind @utility for one-off utility classes
+   -------------------------------------------------------------------------- */
+@utility animate-slide-up {
+  animation: slide-up 0.3s ease-out;
 }

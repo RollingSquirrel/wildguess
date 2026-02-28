@@ -20,7 +20,6 @@ import { DonutChartComponent } from '../../components/donut-chart';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, DonutChartComponent],
   templateUrl: './room.page.html',
-  styleUrl: './room.page.css',
 })
 export class RoomPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);

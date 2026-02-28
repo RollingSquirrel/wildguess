@@ -1,10 +1,10 @@
 <div class="min-h-screen">
   <!-- Header -->
-  <header class="header">
+  <header class="bg-bg-secondary border-b border-border">
     <div class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
-      <h1 class="text-xl font-bold"><span class="brand-accent">Wild</span>guess</h1>
+      <h1 class="text-xl font-bold"><span class="text-primary">Wild</span>guess</h1>
       <div class="flex items-center gap-4">
-        <span class="user-name">{{ auth.currentUser()?.username }}</span>
+        <span class="text-text-secondary text-sm">{{ auth.currentUser()?.username }}</span>
         <button (click)="logout()" class="btn-ghost text-sm" aria-label="Log out">Logout</button>
       </div>
     </div>
@@ -60,7 +60,9 @@
       <div class="modal-backdrop" (click)="cancelPasswordJoin()">
         <div class="modal-card" (click)="$event.stopPropagation()">
           <h2 class="text-lg font-semibold mb-2">🔒 Password Required</h2>
-          <p class="modal-subtitle">This room is password-protected. Enter the password to join.</p>
+          <p class="text-text-secondary text-[0.85rem] mb-2">
+            This room is password-protected. Enter the password to join.
+          </p>
           @if (joinError()) {
             <div class="error-banner-sm">{{ joinError() }}</div>
           }
@@ -82,17 +84,25 @@
     }
 
     <!-- Tabs -->
-    <div class="tabs">
+    <div class="flex gap-0.5 mb-6 bg-bg-secondary rounded-[10px] p-[3px]">
       <button
-        class="tab"
-        [class.tab-active]="activeTab() === 'browse'"
+        [class]="
+          'flex-1 py-2.5 px-4 border-none rounded-lg font-medium text-sm cursor-pointer transition-all duration-200 hover:text-text-primary ' +
+          (activeTab() === 'browse'
+            ? 'bg-bg-surface text-primary shadow-[0_1px_3px_rgba(0,0,0,0.2)]'
+            : 'bg-transparent text-text-secondary')
+        "
         (click)="activeTab.set('browse')"
       >
         Browse Rooms
       </button>
       <button
-        class="tab"
-        [class.tab-active]="activeTab() === 'mine'"
+        [class]="
+          'flex-1 py-2.5 px-4 border-none rounded-lg font-medium text-sm cursor-pointer transition-all duration-200 hover:text-text-primary ' +
+          (activeTab() === 'mine'
+            ? 'bg-bg-surface text-primary shadow-[0_1px_3px_rgba(0,0,0,0.2)]'
+            : 'bg-transparent text-text-secondary')
+        "
         (click)="activeTab.set('mine')"
       >
         Your Rooms
@@ -103,20 +113,21 @@
     @if (activeTab() === 'browse') {
       @if (allRooms().length === 0) {
         <div class="card text-center py-12">
-          <p class="empty-primary">No rooms available</p>
-          <p class="empty-secondary">Create a new room to get started</p>
+          <p class="text-text-muted text-lg mb-1">No rooms available</p>
+          <p class="text-text-muted text-[0.85rem]">Create a new room to get started</p>
         </div>
       } @else {
-        <div class="room-grid">
+        <div class="grid gap-4 grid-cols-[repeat(auto-fill,minmax(260px,1fr))]">
           @for (room of allRooms(); track room.id) {
             <button
               (click)="joinRoom(room)"
-              class="room-card"
-              [class.room-card-member]="room.isMember"
+              class="block w-full text-left bg-bg-card border border-border rounded-xl p-5 cursor-pointer transition-all duration-200 animate-room-card-entry hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_0_20px_var(--color-primary-glow)]"
+              [class.border-l-[3px]]="room.isMember"
+              [class.border-l-primary]="room.isMember"
               [attr.aria-label]="'Join room ' + room.name"
             >
               <div class="flex items-start justify-between mb-2">
-                <h3 class="room-name">{{ room.name }}</h3>
+                <h3 class="font-semibold text-text-primary truncate">{{ room.name }}</h3>
                 <div class="flex items-center gap-2">
                   @if (room.hasPassword) {
                     <span class="lock-badge" title="Password protected">🔒</span>
@@ -126,13 +137,13 @@
                   }
                 </div>
               </div>
-              <div class="room-meta">
-                <span class="meta-item">
+              <div class="flex items-center gap-3 text-sm text-text-secondary">
+                <span class="flex items-center gap-1">
                   <span aria-hidden="true">👥</span> {{ room.memberCount }}
                 </span>
                 <span [class]="'badge-phase badge-' + room.phase">{{ room.phase }}</span>
               </div>
-              <div class="room-code-small">{{ room.id }}</div>
+              <div class="mt-3 text-[0.7rem] font-mono text-text-muted">{{ room.id }}</div>
             </button>
           }
         </div>
@@ -143,19 +154,19 @@
     @if (activeTab() === 'mine') {
       @if (myRooms().length === 0) {
         <div class="card text-center py-12">
-          <p class="empty-primary">You haven't joined any rooms</p>
-          <p class="empty-secondary">Browse rooms or create a new one</p>
+          <p class="text-text-muted text-lg mb-1">You haven't joined any rooms</p>
+          <p class="text-text-muted text-[0.85rem]">Browse rooms or create a new one</p>
         </div>
       } @else {
-        <div class="room-grid">
+        <div class="grid gap-4 grid-cols-[repeat(auto-fill,minmax(260px,1fr))]">
           @for (room of myRooms(); track room.id) {
             <button
               (click)="enterRoom(room.id)"
-              class="room-card room-card-member"
+              class="block w-full text-left bg-bg-card border border-border rounded-xl p-5 cursor-pointer transition-all duration-200 animate-room-card-entry border-l-[3px] border-l-primary hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_0_20px_var(--color-primary-glow)]"
               [attr.aria-label]="'Enter room ' + room.name"
             >
               <div class="flex items-start justify-between mb-2">
-                <h3 class="room-name">{{ room.name }}</h3>
+                <h3 class="font-semibold text-text-primary truncate">{{ room.name }}</h3>
                 <div class="flex items-center gap-2">
                   @if (room.hasPassword) {
                     <span class="lock-badge" title="Password protected">🔒</span>
@@ -165,13 +176,13 @@
                   }
                 </div>
               </div>
-              <div class="room-meta">
-                <span class="meta-item">
+              <div class="flex items-center gap-3 text-sm text-text-secondary">
+                <span class="flex items-center gap-1">
                   <span aria-hidden="true">👥</span> {{ room.memberCount }}
                 </span>
                 <span [class]="'badge-phase badge-' + room.phase">{{ room.phase }}</span>
               </div>
-              <div class="room-code-small">{{ room.id }}</div>
+              <div class="mt-3 text-[0.7rem] font-mono text-text-muted">{{ room.id }}</div>
             </button>
           }
         </div>
