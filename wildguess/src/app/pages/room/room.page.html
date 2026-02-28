@@ -18,7 +18,7 @@
           </span>
         </div>
         <div class="flex items-center gap-3">
-          <span class="text-[var(--color-text-secondary)] text-sm">Round {{ room.round }}</span>
+          <span class="text-text-secondary text-sm">Round {{ room.round }}</span>
           <button (click)="leaveRoom()" class="btn-danger-ghost text-sm" aria-label="Leave room">
             Leave
           </button>
@@ -29,10 +29,8 @@
       @if (room.currentTopic) {
         <div class="topic-bar">
           <div class="max-w-6xl mx-auto px-4">
-            <span class="text-[var(--color-text-muted)] text-xs uppercase tracking-wider mr-2"
-              >Topic</span
-            >
-            <span class="text-[var(--color-text-primary)] text-sm">{{ room.currentTopic }}</span>
+            <span class="text-text-muted text-xs uppercase tracking-wider mr-2">Topic</span>
+            <span class="text-text-primary text-sm">{{ room.currentTopic }}</span>
           </div>
         </div>
       }
@@ -60,13 +58,20 @@
                     placeholder="Set topic for this round..."
                     aria-label="Topic for this round"
                   />
-                  <button type="submit" [disabled]="topicForm.invalid" class="btn-sm">Set</button>
+                  <button
+                    type="submit"
+                    [disabled]="topicForm.invalid || isUpdating()"
+                    class="btn-sm"
+                  >
+                    Set
+                  </button>
                 </form>
 
                 <button
                   (click)="reveal()"
                   class="btn-action relative overflow-hidden group"
                   [class.btn-action-ready]="allVoted()"
+                  [disabled]="isUpdating()"
                 >
                   @if (!allVoted() && votingProgressPercent() > 0) {
                     <div
@@ -85,13 +90,19 @@
               }
 
               @if (phase() === 'revealed') {
-                <button (click)="triggerVersus()" class="btn-action btn-versus">
+                <button
+                  (click)="triggerVersus()"
+                  class="btn-action btn-versus"
+                  [disabled]="isUpdating()"
+                >
                   ⚔️ Versus Mode
                 </button>
               }
 
               @if (phase() === 'versus') {
-                <button (click)="nextRound()" class="btn-action btn-next">🔄 Next Round</button>
+                <button (click)="nextRound()" class="btn-action btn-next" [disabled]="isUpdating()">
+                  🔄 Next Round
+                </button>
               }
             </div>
           }
@@ -108,6 +119,7 @@
                     [class.vote-card-selected]="selectedVote() === value"
                     [attr.aria-label]="'Vote ' + value"
                     [attr.aria-pressed]="selectedVote() === value"
+                    [disabled]="isUpdating()"
                   >
                     <span class="vote-value">{{ value }}</span>
                   </button>
@@ -211,7 +223,7 @@
                   Time for discussion! The most extreme voters explain their reasoning.
                 </p>
               } @else {
-                <div class="text-center py-12 text-[var(--color-text-muted)]">
+                <div class="text-center py-12 text-text-muted">
                   All votes are the same — consensus reached! 🎉
                 </div>
               }
@@ -235,9 +247,7 @@
 
         <!-- Sidebar: Members -->
         <aside class="members-panel" aria-label="Room members">
-          <h2
-            class="text-sm font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider mb-3"
-          >
+          <h2 class="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-3">
             Members ({{ members().length }})
           </h2>
           <ul class="member-list">
@@ -269,7 +279,8 @@
                     (click)="kickMember(member.userId)"
                     class="kick-btn"
                     [attr.aria-label]="'Kick ' + member.username"
-                    title="Kick"
+                    title="Kick member"
+                    [disabled]="isUpdating()"
                   >
                     ✕
                   </button>
@@ -283,6 +294,6 @@
   </div>
 } @else {
   <div class="min-h-screen flex items-center justify-center">
-    <div class="text-[var(--color-text-muted)]">Loading room...</div>
+    <div class="text-text-muted">Loading room...</div>
   </div>
 }

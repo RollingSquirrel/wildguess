@@ -3,6 +3,7 @@ import { cors } from 'hono/cors';
 import authRoutes from './routes/auth.js';
 import roomRoutes from './routes/rooms.js';
 import voteRoutes from './routes/votes.js';
+import configRoutes from './routes/config.js';
 
 const app = new Hono();
 
@@ -25,6 +26,7 @@ app.use(
 app.route('/api/auth', authRoutes);
 app.route('/api/rooms', roomRoutes);
 app.route('/api/rooms', voteRoutes);
+app.route('/api/config', configRoutes);
 
 // Health check
 app.get('/api/health', (c) => {
