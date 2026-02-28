@@ -13,8 +13,7 @@ You are an expert in Node.js, TypeScript, and backend development. This document
 - The application separates the HTTP server instantiation (`src/index.ts`) from the Hono application definition (`src/app.ts`).
 - **NEVER** instantiate the server `serve(...)` inside `src/app.ts`, as this breaks tests. `app.ts` should only define routes, middleware, and export the `app` instance.
 - **High-Frequency State (Presence):** Large-scale, high-frequency updates (like "last seen" heartbeats) must be handled **in-memory** to avoid SQLite write-lock bottlenecks. Use the `PresenceStore` utility for heartbeat tracking. **CRITICAL:** Do NOT add high-frequency heartbeat columns to database tables.
-- **Database Schema & Migrations:** The schema is defined in `src/database/schema.ts`. We use Drizzle migrations for all schema changes, located in the `drizzle/` directory. **NEVER** write manual `CREATE TABLE` SQL statements.
-  - **Migration Management:** Always use `pnpm exec drizzle-kit drop` to remove or rollback migrations. Never manually delete migration files or edit `_journal.json`.
+- **Database Schema & Migrations:** The schema is defined in `src/database/schema.ts`. We use Drizzle migrations for all schema changes, located in the `drizzle/` directory. **NEVER** write manual `CREATE TABLE` SQL statements. Generate meaningful names for migration files.
 - **Initialization:** Migrations and configuration validation are run on startup inside `src/index.ts`. If critical environment variables (like `POLLING_RATE_MS` and `ROOM_TIMEOUT_MS`) are logically inconsistent, the server must crash early and log a clear error.
 
 ## File Structure & Conventions
