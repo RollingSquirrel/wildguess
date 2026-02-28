@@ -15,11 +15,18 @@ import { Subscription, interval, switchMap, startWith } from 'rxjs';
 import { BadgeComponent, asBadgeVariant } from '../../ui/badge/badge';
 import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
 import { ModalComponent } from '../../ui/modal/modal';
+import { ButtonComponent } from '../../ui/button/button';
 
 @Component({
   selector: 'app-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, BadgeComponent, ErrorBannerComponent, ModalComponent],
+  imports: [
+    ReactiveFormsModule,
+    BadgeComponent,
+    ErrorBannerComponent,
+    ModalComponent,
+    ButtonComponent,
+  ],
   templateUrl: './dashboard.page.html',
 })
 export class DashboardPage implements OnInit, OnDestroy {

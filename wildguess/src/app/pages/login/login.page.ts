@@ -10,11 +10,12 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
+import { ButtonComponent } from '../../ui/button/button';
 
 @Component({
   selector: 'app-login',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RouterLink, ErrorBannerComponent],
+  imports: [ReactiveFormsModule, RouterLink, ErrorBannerComponent, ButtonComponent],
   template: `
     <div class="min-h-screen flex items-center justify-center p-4">
       <div
@@ -71,7 +72,13 @@ import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
             </wg-error-banner>
           }
 
-          <button type="submit" [disabled]="loading() || form.invalid" class="btn-primary w-full">
+          <button
+            wgButton
+            variant="primary"
+            type="submit"
+            [disabled]="loading() || form.invalid"
+            class="w-full"
+          >
             @if (loading()) {
               <span class="inline-block animate-spin mr-2">⟳</span>
             }

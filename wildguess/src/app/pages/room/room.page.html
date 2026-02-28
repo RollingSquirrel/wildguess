@@ -17,7 +17,13 @@
         </div>
         <div class="flex items-center gap-3">
           <span class="text-text-secondary text-sm">Round {{ room.round }}</span>
-          <button (click)="leaveRoom()" class="btn-danger-ghost text-sm" aria-label="Leave room">
+          <button
+            wgButton
+            variant="danger-ghost"
+            (click)="leaveRoom()"
+            class="text-sm"
+            aria-label="Leave room"
+          >
             Leave
           </button>
         </div>
@@ -57,9 +63,10 @@
                     aria-label="Topic for this round"
                   />
                   <button
+                    wgButton
+                    variant="sm"
                     type="submit"
                     [disabled]="topicForm.invalid || isUpdating()"
-                    class="btn-sm"
                   >
                     Set
                   </button>

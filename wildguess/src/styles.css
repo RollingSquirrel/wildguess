@@ -178,51 +178,6 @@ button { font-family: inherit; cursor: pointer; }
     @apply text-text-muted;
   }
 
-  /* ---- Buttons ---- */
-  .btn-primary {
-    @apply py-3 px-5 bg-primary text-bg-primary font-semibold rounded-[10px]
-           border-none text-[0.9rem] whitespace-nowrap cursor-pointer
-           transition-all duration-200;
-  }
-  .btn-primary:hover:not(:disabled) {
-    @apply bg-primary-dim shadow-[0_0_20px_var(--color-primary-glow)];
-  }
-  .btn-primary:disabled {
-    @apply opacity-50 cursor-not-allowed;
-  }
-
-  .btn-sm {
-    @apply py-2 px-4 bg-primary text-bg-primary font-semibold rounded-lg
-           border-none text-[0.85rem] whitespace-nowrap
-           transition-all duration-200;
-  }
-  .btn-sm:disabled {
-    @apply opacity-40 cursor-not-allowed;
-  }
-
-  .btn-ghost {
-    @apply bg-transparent border-none text-text-secondary font-medium
-           py-2 px-3 rounded-lg cursor-pointer transition-all duration-150;
-  }
-  .btn-ghost:hover {
-    @apply text-danger bg-danger-subtle;
-  }
-
-  .btn-cancel {
-    @apply w-full bg-transparent border border-border text-text-secondary
-           py-2 rounded-lg cursor-pointer text-[0.85rem] transition-all duration-150;
-  }
-  .btn-cancel:hover {
-    @apply border-text-secondary;
-  }
-
-  .btn-danger-ghost {
-    @apply bg-transparent border border-danger text-danger
-           py-1.5 px-3 rounded-lg font-medium transition-all duration-150;
-  }
-  .btn-danger-ghost:hover {
-    @apply bg-danger-subtle;
-  }
 
   /* ---- Cards / Surfaces ---- */
   .card {

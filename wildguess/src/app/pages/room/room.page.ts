@@ -17,6 +17,7 @@ import { DonutChartComponent } from '../../components/donut-chart';
 import { BadgeComponent, asBadgeVariant } from '../../ui/badge/badge';
 import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
 import { VoteCardComponent } from './components/vote-card/vote-card.component';
+import { ButtonComponent } from '../../ui/button/button';
 
 @Component({
   selector: 'app-room',
@@ -27,6 +28,7 @@ import { VoteCardComponent } from './components/vote-card/vote-card.component';
     BadgeComponent,
     ErrorBannerComponent,
     VoteCardComponent,
+    ButtonComponent,
   ],
   templateUrl: './room.page.html',
 })

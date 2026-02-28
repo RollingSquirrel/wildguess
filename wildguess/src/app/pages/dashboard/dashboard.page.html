@@ -5,7 +5,9 @@
       <h1 class="text-xl font-bold"><span class="text-primary">Wild</span>guess</h1>
       <div class="flex items-center gap-4">
         <span class="text-text-secondary text-sm">{{ auth.currentUser()?.username }}</span>
-        <button (click)="logout()" class="btn-ghost text-sm" aria-label="Log out">Logout</button>
+        <button wgButton variant="ghost" (click)="logout()" class="text-sm" aria-label="Log out">
+          Logout
+        </button>
       </div>
     </div>
   </header>
@@ -14,7 +16,7 @@
   <div class="max-w-5xl mx-auto px-4 py-6">
     <!-- Create Room -->
     <div class="flex items-center gap-3 mb-6">
-      <button (click)="showCreateForm.set(!showCreateForm())" class="btn-primary">
+      <button wgButton variant="primary" (click)="showCreateForm.set(!showCreateForm())">
         + Create Room
       </button>
     </div>
@@ -32,7 +34,7 @@
               placeholder="Room name (e.g. Sprint 42)"
               aria-label="Room name"
             />
-            <button type="submit" [disabled]="createForm.invalid" class="btn-primary">
+            <button wgButton variant="primary" type="submit" [disabled]="createForm.invalid">
               Create
             </button>
           </div>
@@ -75,9 +77,11 @@
             (input)="joinPassword.set($any($event.target).value)"
             (keydown.enter)="submitPasswordJoin()"
           />
-          <button (click)="submitPasswordJoin()" class="btn-primary">Join</button>
+          <button wgButton variant="primary" (click)="submitPasswordJoin()">Join</button>
         </div>
-        <button (click)="cancelPasswordJoin()" class="btn-cancel mt-3">Cancel</button>
+        <button wgButton variant="cancel" (click)="cancelPasswordJoin()" class="mt-3">
+          Cancel
+        </button>
       </wg-modal>
     }
 
