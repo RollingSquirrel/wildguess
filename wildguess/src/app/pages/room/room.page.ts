@@ -17,7 +17,7 @@ import { DonutChartComponent } from '../../components/donut-chart';
 import { BadgeComponent, asBadgeVariant } from '../../ui/badge/badge';
 import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
 import { VoteCardComponent } from './components/vote-card/vote-card.component';
-import { ButtonComponent } from '../../ui/button/button';
+import { ButtonDirective } from '../../ui/button/button';
 import { InputDirective } from '../../ui/input/input';
 
 @Component({
@@ -29,7 +29,7 @@ import { InputDirective } from '../../ui/input/input';
     BadgeComponent,
     ErrorBannerComponent,
     VoteCardComponent,
-    ButtonComponent,
+    ButtonDirective,
     InputDirective,
   ],
   templateUrl: './room.page.html',

@@ -1,14 +1,12 @@
-import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
+import { Directive, input, computed } from '@angular/core';
 
-@Component({
+@Directive({
   selector: 'button[wgButton], a[wgButton]',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<ng-content />`,
   host: {
     '[class]': 'classes()',
   },
 })
-export class ButtonComponent {
+export class ButtonDirective {
   /** The variant style of the button. */
   variant = input<'primary' | 'sm' | 'ghost' | 'cancel' | 'danger-ghost'>('primary');
 

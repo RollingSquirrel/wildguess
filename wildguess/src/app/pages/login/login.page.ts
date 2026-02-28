@@ -10,13 +10,13 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
-import { ButtonComponent } from '../../ui/button/button';
+import { ButtonDirective } from '../../ui/button/button';
 import { InputDirective } from '../../ui/input/input';
 
 @Component({
   selector: 'app-login',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RouterLink, ErrorBannerComponent, ButtonComponent, InputDirective],
+  imports: [ReactiveFormsModule, RouterLink, ErrorBannerComponent, ButtonDirective, InputDirective],
   template: `
     <div class="min-h-screen flex items-center justify-center p-4">
       <div
