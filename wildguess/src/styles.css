@@ -154,30 +154,6 @@ button { font-family: inherit; cursor: pointer; }
    4. COMPONENT LAYER — Reusable cross-page UI components
    -------------------------------------------------------------------------- */
 @layer components {
-  /* ---- Inputs ---- */
-  .input-field {
-    @apply w-full py-3 px-4 bg-bg-primary border border-border rounded-[10px]
-           text-text-primary text-[0.95rem] box-border
-           transition-[border-color,box-shadow] duration-200;
-  }
-  .input-field:focus {
-    @apply outline-none border-primary shadow-[0_0_0_3px_var(--color-primary-glow)];
-  }
-  .input-field::placeholder {
-    @apply text-text-muted;
-  }
-  .input-field-sm {
-    @apply w-full py-2 px-3 bg-bg-primary border border-border rounded-lg
-           text-text-primary text-[0.85rem] box-border
-           transition-[border-color] duration-200;
-  }
-  .input-field-sm:focus {
-    @apply outline-none border-primary shadow-[0_0_0_2px_var(--color-primary-glow)];
-  }
-  .input-field-sm::placeholder {
-    @apply text-text-muted;
-  }
-
 
   /* ---- Cards / Surfaces ---- */
   .card {

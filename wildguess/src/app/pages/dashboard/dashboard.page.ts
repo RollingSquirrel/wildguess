@@ -16,6 +16,7 @@ import { BadgeComponent, asBadgeVariant } from '../../ui/badge/badge';
 import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
 import { ModalComponent } from '../../ui/modal/modal';
 import { ButtonComponent } from '../../ui/button/button';
+import { InputDirective } from '../../ui/input/input';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,6 +27,7 @@ import { ButtonComponent } from '../../ui/button/button';
     ErrorBannerComponent,
     ModalComponent,
     ButtonComponent,
+    InputDirective,
   ],
   templateUrl: './dashboard.page.html',
 })

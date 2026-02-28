@@ -11,11 +11,12 @@ import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
 import { ButtonComponent } from '../../ui/button/button';
+import { InputDirective } from '../../ui/input/input';
 
 @Component({
   selector: 'app-login',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RouterLink, ErrorBannerComponent, ButtonComponent],
+  imports: [ReactiveFormsModule, RouterLink, ErrorBannerComponent, ButtonComponent, InputDirective],
   template: `
     <div class="min-h-screen flex items-center justify-center p-4">
       <div
@@ -44,7 +45,7 @@ import { ButtonComponent } from '../../ui/button/button';
               type="text"
               formControlName="username"
               autocomplete="username"
-              class="input-field"
+              wgInput
               placeholder="Enter your username"
             />
           </div>
@@ -61,7 +62,7 @@ import { ButtonComponent } from '../../ui/button/button';
               type="password"
               formControlName="password"
               autocomplete="current-password"
-              class="input-field"
+              wgInput
               placeholder="Enter your password"
             />
           </div>

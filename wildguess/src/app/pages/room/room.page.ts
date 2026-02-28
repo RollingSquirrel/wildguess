@@ -18,6 +18,7 @@ import { BadgeComponent, asBadgeVariant } from '../../ui/badge/badge';
 import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
 import { VoteCardComponent } from './components/vote-card/vote-card.component';
 import { ButtonComponent } from '../../ui/button/button';
+import { InputDirective } from '../../ui/input/input';
 
 @Component({
   selector: 'app-room',
@@ -29,6 +30,7 @@ import { ButtonComponent } from '../../ui/button/button';
     ErrorBannerComponent,
     VoteCardComponent,
     ButtonComponent,
+    InputDirective,
   ],
   templateUrl: './room.page.html',
 })

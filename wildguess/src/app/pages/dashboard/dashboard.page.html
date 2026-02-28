@@ -30,7 +30,8 @@
               id="create-room-name"
               type="text"
               formControlName="name"
-              class="input-field flex-1"
+              wgInput
+              class="flex-1"
               placeholder="Room name (e.g. Sprint 42)"
               aria-label="Room name"
             />
@@ -44,7 +45,9 @@
               id="create-room-password"
               type="password"
               formControlName="password"
-              class="input-field input-field-small flex-1"
+              wgInput
+              variant="sm"
+              class="flex-1"
               placeholder="Optional password (leave empty for open room)"
               aria-label="Room password (optional)"
             />
@@ -70,7 +73,8 @@
         <div class="flex gap-3 mt-4">
           <input
             type="password"
-            class="input-field flex-1"
+            wgInput
+            class="flex-1"
             placeholder="Enter password"
             aria-label="Room password"
             [value]="joinPassword()"
