@@ -13,6 +13,10 @@ Wildguess respects limitations of hosting behind reverse proxies and load balanc
 | `DB_PATH`     | api           | `/data/sqlite.db` | SQLite database file path                 |
 | `CORS_ORIGIN` | api           | `*`               | Allowed origins (comma-separated or `*`)  |
 | `BASE_URL`    | client, nginx | `/`               | Sub-path for hosting (e.g. `/wildguess/`) |
+| `API_HOST`    | nginx         | `api`             | Hostname/IP of the API container          |
+| `API_PORT`    | nginx         | `3000`            | Port of the API container                 |
+| `CLIENT_HOST` | nginx         | `client`          | Hostname/IP of the client container       |
+| `CLIENT_PORT` | nginx         | `80`              | Port of the client container              |
 | `SSL_CERT`    | nginx         | —                 | Path to SSL certificate inside container  |
 | `SSL_KEY`     | nginx         | —                 | Path to SSL private key inside container  |
 | `HTTP_PORT`   | nginx (host)  | `8080`            | Host port mapped to Nginx HTTP            |
