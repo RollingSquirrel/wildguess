@@ -12,11 +12,12 @@ import { AuthService } from '../../services/auth.service';
 import { RoomService } from '../../services/room.service';
 import type { RoomSummary, DiscoverRoom } from '../../models/api.models';
 import { Subscription, interval, switchMap, startWith } from 'rxjs';
+import { BadgeComponent, asBadgeVariant } from '../../ui/badge/badge';
 
 @Component({
   selector: 'app-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, BadgeComponent],
   templateUrl: './dashboard.page.html',
 })
 export class DashboardPage implements OnInit, OnDestroy {
@@ -24,6 +25,8 @@ export class DashboardPage implements OnInit, OnDestroy {
   private readonly roomService = inject(RoomService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+
+  protected readonly asBadgeVariant = asBadgeVariant;
 
   readonly myRooms = signal<RoomSummary[]>([]);
   readonly allRooms = signal<DiscoverRoom[]>([]);

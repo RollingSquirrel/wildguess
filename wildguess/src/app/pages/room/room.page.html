@@ -13,21 +13,7 @@
           >
             {{ room.id }}
           </button>
-          <span
-            class="text-[0.7rem] font-semibold py-[3px] px-2.5 rounded-md uppercase tracking-wide"
-            [class.text-info]="room.phase === 'voting'"
-            [class.text-primary]="room.phase === 'revealed'"
-            [class.text-warning]="room.phase === 'versus'"
-            [style.background]="
-              room.phase === 'voting'
-                ? 'rgba(64, 196, 255, 0.12)'
-                : room.phase === 'revealed'
-                  ? 'rgba(0, 230, 118, 0.12)'
-                  : 'rgba(255, 170, 0, 0.12)'
-            "
-          >
-            {{ room.phase }}
-          </span>
+          <wg-badge [variant]="asBadgeVariant('phase-' + room.phase)">{{ room.phase }}</wg-badge>
         </div>
         <div class="flex items-center gap-3">
           <span class="text-text-secondary text-sm">Round {{ room.round }}</span>
@@ -370,10 +356,10 @@
                     <div class="text-[0.85rem] font-medium text-text-primary truncate">
                       {{ member.username }}
                       @if (member.isHost) {
-                        <span class="host-badge">👑</span>
+                        <span aria-label="Host" title="Host">👑</span>
                       }
                       @if (member.userId === currentUserId()) {
-                        <span class="you-badge">(you)</span>
+                        <span class="ml-1 text-[0.7rem] font-normal text-text-muted">(you)</span>
                       }
                     </div>
                     @if (phase() === 'voting') {

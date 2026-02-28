@@ -130,10 +130,15 @@
                 <h3 class="font-semibold text-text-primary truncate">{{ room.name }}</h3>
                 <div class="flex items-center gap-2">
                   @if (room.hasPassword) {
-                    <span class="lock-badge" title="Password protected">🔒</span>
+                    <wg-badge
+                      variant="lock"
+                      title="Password protected"
+                      aria-label="Password protected"
+                      >🔒</wg-badge
+                    >
                   }
                   @if (room.isMember) {
-                    <span class="badge-member">Joined</span>
+                    <wg-badge variant="member">Joined</wg-badge>
                   }
                 </div>
               </div>
@@ -141,7 +146,9 @@
                 <span class="flex items-center gap-1">
                   <span aria-hidden="true">👥</span> {{ room.memberCount }}
                 </span>
-                <span [class]="'badge-phase badge-' + room.phase">{{ room.phase }}</span>
+                <wg-badge [variant]="asBadgeVariant('phase-' + room.phase)">{{
+                  room.phase
+                }}</wg-badge>
               </div>
               <div class="mt-3 text-[0.7rem] font-mono text-text-muted">{{ room.id }}</div>
             </button>
@@ -169,10 +176,15 @@
                 <h3 class="font-semibold text-text-primary truncate">{{ room.name }}</h3>
                 <div class="flex items-center gap-2">
                   @if (room.hasPassword) {
-                    <span class="lock-badge" title="Password protected">🔒</span>
+                    <wg-badge
+                      variant="lock"
+                      title="Password protected"
+                      aria-label="Password protected"
+                      >🔒</wg-badge
+                    >
                   }
                   @if (room.isHost) {
-                    <span class="badge-host">Host</span>
+                    <wg-badge variant="host">Host</wg-badge>
                   }
                 </div>
               </div>
@@ -180,7 +192,9 @@
                 <span class="flex items-center gap-1">
                   <span aria-hidden="true">👥</span> {{ room.memberCount }}
                 </span>
-                <span [class]="'badge-phase badge-' + room.phase">{{ room.phase }}</span>
+                <wg-badge [variant]="asBadgeVariant('phase-' + room.phase)">{{
+                  room.phase
+                }}</wg-badge>
               </div>
               <div class="mt-3 text-[0.7rem] font-mono text-text-muted">{{ room.id }}</div>
             </button>

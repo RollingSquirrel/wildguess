@@ -14,11 +14,12 @@ import { AuthService } from '../../services/auth.service';
 import { RoomService } from '../../services/room.service';
 import { FIBONACCI_VALUES, type RoomState, type RoomPhase } from '../../models/api.models';
 import { DonutChartComponent } from '../../components/donut-chart';
+import { BadgeComponent, asBadgeVariant } from '../../ui/badge/badge';
 
 @Component({
   selector: 'app-room',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, DonutChartComponent],
+  imports: [ReactiveFormsModule, DonutChartComponent, BadgeComponent],
   templateUrl: './room.page.html',
 })
 export class RoomPage implements OnInit, OnDestroy {
@@ -29,6 +30,7 @@ export class RoomPage implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
 
   readonly fibValues = FIBONACCI_VALUES;
+  protected readonly asBadgeVariant = asBadgeVariant;
   readonly roomState = signal<RoomState | null>(null);
   readonly selectedVote = signal<string | null>(null);
   readonly previousPhase = signal<RoomPhase | null>(null);

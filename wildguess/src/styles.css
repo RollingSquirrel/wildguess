@@ -252,27 +252,6 @@ button { font-family: inherit; cursor: pointer; }
     @apply bg-danger-subtle text-danger py-2 px-3 rounded-lg text-[0.8rem];
   }
 
-  /* ---- Badges ---- */
-  .badge-host {
-    @apply text-[0.65rem] font-semibold bg-primary-subtle text-primary
-           py-0.5 px-2 rounded-md uppercase tracking-wide;
-  }
-  .badge-member {
-    @apply text-[0.65rem] font-semibold bg-info-subtle text-info
-           py-0.5 px-2 rounded-md uppercase;
-  }
-  .badge-phase {
-    @apply py-0.5 px-2 rounded-md text-xs font-medium capitalize;
-  }
-  .badge-voting {
-    @apply bg-info-subtle text-info;
-  }
-  .badge-revealed {
-    @apply bg-primary-subtle text-primary;
-  }
-  .badge-versus {
-    @apply bg-warning-subtle text-warning;
-  }
 
   /* ---- Vote cards (pseudo-elements + parent-child selectors) ---- */
   .vote-card {
