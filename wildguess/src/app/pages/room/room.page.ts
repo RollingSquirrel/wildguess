@@ -35,6 +35,7 @@ export class RoomPage implements OnInit, OnDestroy {
   readonly previousPhase = signal<RoomPhase | null>(null);
   readonly phaseAnimating = signal(false);
   readonly error = signal('');
+  readonly isUpdating = signal(false);
 
   readonly topicForm = this.fb.nonNullable.group({
     topic: ['', Validators.required],
@@ -83,9 +84,11 @@ export class RoomPage implements OnInit, OnDestroy {
           this.selectedVote.set(null);
         }
         this.roomState.set(state);
+        this.isUpdating.set(false);
       },
       error: () => {
         this.error.set('Failed to load room');
+        this.isUpdating.set(false);
       },
     });
   }
@@ -107,18 +110,21 @@ export class RoomPage implements OnInit, OnDestroy {
   }
 
   reveal(): void {
+    this.isUpdating.set(true);
     this.roomService.revealVotes(this.roomId).subscribe({
       error: () => this.error.set('Failed to reveal votes'),
     });
   }
 
   triggerVersus(): void {
+    this.isUpdating.set(true);
     this.roomService.triggerVersus(this.roomId).subscribe({
       error: () => this.error.set('Failed to trigger versus'),
     });
   }
 
   nextRound(): void {
+    this.isUpdating.set(true);
     this.roomService.nextRound(this.roomId).subscribe({
       error: () => this.error.set('Failed to start next round'),
     });
@@ -127,6 +133,7 @@ export class RoomPage implements OnInit, OnDestroy {
   setTopic(): void {
     if (this.topicForm.invalid) return;
     const { topic } = this.topicForm.getRawValue();
+    this.isUpdating.set(true);
     this.roomService.setTopic(this.roomId, topic).subscribe({
       next: () => this.topicForm.reset(),
       error: () => this.error.set('Failed to set topic'),
@@ -141,6 +148,7 @@ export class RoomPage implements OnInit, OnDestroy {
   }
 
   kickMember(userId: string): void {
+    this.isUpdating.set(true);
     this.roomService.kickMember(this.roomId, userId).subscribe({
       error: () => this.error.set('Failed to kick member'),
     });

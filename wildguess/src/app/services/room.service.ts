@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, interval, switchMap, startWith } from 'rxjs';
 import { AuthService } from './auth.service';
+import { ConfigService } from './config.service';
 import type { RoomSummary, RoomState, DiscoverRoom } from '../models/api.models';
 
 const API_BASE = 'api';
@@ -10,6 +11,7 @@ const API_BASE = 'api';
 export class RoomService {
   private readonly http = inject(HttpClient);
   private readonly auth = inject(AuthService);
+  private readonly configService = inject(ConfigService);
 
   private headers() {
     return { headers: this.auth.getHeaders() };
@@ -30,11 +32,15 @@ export class RoomService {
     return this.http.get<RoomState>(`${API_BASE}/rooms/${roomId}`, this.headers());
   }
 
-  /** Poll room state every 3 seconds */
+  /** Poll room state every X seconds based on config */
   pollRoomState(roomId: string): Observable<RoomState> {
-    return interval(3000).pipe(
-      startWith(0),
-      switchMap(() => this.getRoomState(roomId)),
+    return this.configService.getPollingRate().pipe(
+      switchMap((rate) =>
+        interval(rate).pipe(
+          startWith(0),
+          switchMap(() => this.getRoomState(roomId)),
+        ),
+      ),
     );
   }
 
