@@ -6,8 +6,9 @@
 
 Wildguess uses **Tailwind CSS v4** with a custom dark theme. The styling follows two principles:
 
-1. **Global theme** → Design tokens, keyframes, base resets, and truly reusable component classes live in `styles.css`
-2. **Inline Tailwind** → Page-specific styling uses Tailwind utility classes directly in component templates
+1. **Global theme** → Design tokens, keyframes, and base resets live in `styles.css`
+2. **UI Component Library** → Reusable elements (Buttons, Inputs, Modals) are built as Angular standalone components in `src/app/ui/`
+3. **Inline Tailwind** → Page-specific layout and unique styling use Tailwind utility classes directly in component templates
 
 ## Technology Setup
 
@@ -25,13 +26,17 @@ Wildguess uses **Tailwind CSS v4** with a custom dark theme. The styling follows
 
 ### `src/styles.css` (global)
 
-| Section             | Purpose                                                                          |
-| ------------------- | -------------------------------------------------------------------------------- |
-| `@theme { }`        | Design tokens → colors, fonts, animations                                        |
-| `@keyframes`        | Animation definitions referenced by `--animate-*` tokens                         |
-| Base CSS            | `html`/`body` resets, scrollbar, focus ring, button reset                        |
-| `@layer components` | Reusable cross-page classes (inputs, buttons, cards, modals, badges, vote cards) |
-| `@utility`          | Custom one-off Tailwind utilities                                                |
+| Section             | Purpose                                                   |
+| ------------------- | --------------------------------------------------------- |
+| `@theme { }`        | Design tokens → colors, fonts, animations                 |
+| `@keyframes`        | Animation definitions referenced by `--animate-*` tokens  |
+| Base CSS            | `html`/`body` resets, scrollbar, focus ring, button reset |
+| `@layer components` | Shared styles that can be overridden by utility classes   |
+| `@utility`          | Custom one-off Tailwind utilities                         |
+
+### `src/app/ui/` (shared components)
+
+Reusable UI primitives like `wgButton`, `wgInput`, and `wg-modal`. These encapsulate complex styling logic (hover states, variants, focus rings) into easy-to-use Angular components/directives.
 
 ### Component templates (page-specific)
 
@@ -39,7 +44,7 @@ Page layout, section structure, and one-off styling use Tailwind utility classes
 
 **Crucially, there are NO separate `.css` files per page.**
 
-If a style pattern is too complex for inline utilities (e.g., uses pseudo-elements or complex animations), it must be moved to a **reusable UI component** in `src/app/ui/`. These UI components may use localized `styles:` blocks with `@reference` if necessary, but the goal is to keep the application modular and avoid the need for page-level CSS.
+If a style pattern is too complex for inline utilities (e.g., uses pseudo-elements or complex animations), it must be moved to a **reusable UI component** in `src/app/ui/`. These UI components may use localized `styles:` blocks with `@reference` if necessary, but the goal is to keep the application modular.
 
 ## Design Tokens (`@theme`)
 
@@ -106,22 +111,25 @@ Theme tokens named `--animate-*` → usable as Tailwind classes:
 | `animate-vs-pulse`        | VS badge pulse         |
 | `animate-room-card-entry` | Room card entrance     |
 
-## Reusable Component Classes
+## UI Component System
 
-Defined in `@layer components` inside `styles.css`. Use these across any page:
+Instead of global CSS classes, we use Angular standalone components and directives in `src/app/ui/`.
 
-| Class               | Usage                           |
-| ------------------- | ------------------------------- |
-| `.input-field`      | Standard full-width input       |
-| `.input-field-sm`   | Compact input (topic bar, etc.) |
-| `.btn-primary`      | Main CTA (green fill)           |
-| `.btn-sm`           | Small primary button            |
-| `.btn-ghost`        | Text button, danger hover       |
-| `.btn-cancel`       | Bordered cancel button          |
-| `.btn-danger-ghost` | Outlined danger button          |
-| `.card`             | General content card            |
-| `.modal-backdrop`   | Fixed overlay with blur         |
-| `.modal-card`       | Centered modal content          |
+| Component/Directive | Usage                                                                              |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| `[wgButton]`        | Button directive with variants: `primary`, `sm`, `ghost`, `cancel`, `danger-ghost` |
+| `[wgInput]`         | Input directive with variants: `default`, `sm`                                     |
+| `wg-badge`          | Badge component with semantic variants (host, member, phases)                      |
+| `wg-modal`          | Modal overlay with backdrop blur and entry animations                              |
+| `wg-error-banner`   | Error notification banner with `alert` role                                        |
+
+### Usage Example:
+
+```html
+<button wgButton variant="primary" (click)="doSomething()">Click Me</button>
+<input wgInput placeholder="Type here..." />
+<wg-badge variant="host">Host</wg-badge>
+```
 
 ## Style Rules for Adding New UI
 
@@ -178,28 +186,25 @@ Use Angular class bindings for state-dependent styles:
 <!-- Boolean toggle -->
 <div
   class="size-8 rounded-full"
-  [class.border-primary]="member.hasVoted"
-  [class.text-primary]="member.hasVoted"
-  [class.border-border]="!member.hasVoted"
+  [class.border-primary]="member.hasVoted()"
+  [class.text-primary]="member.hasVoted()"
+  [class.border-border]="!member.hasVoted()"
 ></div>
 
-<!-- Dynamic class switching -->
+<!-- Dynamic class switching (Signals) -->
 <button
   [class]="'base-classes ' + (isActive()
     ? 'bg-primary text-bg-primary'
     : 'bg-transparent text-text-secondary')"
 ></button>
-
-<!-- Dynamic style for complex values -->
-<span
-  [style.background]="phase === 'voting' ? 'rgba(64, 196, 255, 0.12)' : '...'"
-></span>
 ```
 
-### 5. Dynamic badge classes
+### 5. Using the Badge Component
 
 ```html
-<span [class]="'badge-phase badge-' + room.phase">{{ room.phase }}</span>
+<wg-badge [variant]="asBadgeVariant('phase-' + room().phase)">
+  {{ room().phase }}
+</wg-badge>
 ```
 
 ## Accessibility Notes
