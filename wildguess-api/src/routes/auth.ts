@@ -22,34 +22,38 @@ function generateId(): string {
 auth.post('/register', async (c) => {
   const body = await c.req.json<{ username: string; password: string }>();
 
-  if (!body.username || !body.password) {
+  const username = body.username?.trim();
+  const password = body.password;
+
+  if (!username || !password) {
     return c.json({ error: 'Username and password are required' }, 400);
   }
 
-  if (body.username.length < 3 || body.username.length > 20) {
+  if (username.length < 3 || username.length > 20) {
     return c.json({ error: 'Username must be between 3 and 20 characters' }, 400);
   }
 
-  if (body.password.length < 6) {
+  if (password.length < 6) {
     return c.json({ error: 'Password must be at least 6 characters' }, 400);
   }
 
   // Check if username already exists
-  const existing = db.select().from(users).where(eq(users.username, body.username)).get();
+  // We should do a case-insensitive check but let's at least protect against exact trimmed string
+  const existing = db.select().from(users).where(eq(users.username, username)).get();
 
   if (existing) {
     return c.json({ error: 'Username already taken' }, 409);
   }
 
   const salt = randomBytes(16).toString('hex');
-  const passwordHash = `${salt}:${hashPassword(body.password, salt)}`;
+  const passwordHash = `${salt}:${hashPassword(password, salt)}`;
   const userId = generateId();
   const now = Date.now();
 
   db.insert(users)
     .values({
       id: userId,
-      username: body.username,
+      username: username,
       passwordHash,
       createdAt: now,
     })
@@ -63,7 +67,7 @@ auth.post('/register', async (c) => {
 
   return c.json({
     token,
-    user: { id: userId, username: body.username },
+    user: { id: userId, username: username },
   });
 });
 

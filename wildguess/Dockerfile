@@ -20,7 +20,7 @@ RUN pnpm build
 FROM nginx:alpine-slim AS production
 
 # Copy custom nginx config for SPA
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy built assets from build stage
 COPY --from=build /app/dist/wildguess/browser /usr/share/nginx/html

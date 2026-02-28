@@ -30,6 +30,9 @@ RUN pnpm install --frozen-lockfile --prod
 # Copy compiled output from build stage
 COPY --from=build /app/dist ./dist
 
+# Copy migrations folder
+COPY drizzle/ ./drizzle
+
 # Create data directory for SQLite volume mount
 RUN mkdir -p /data && chown node:node /data
 
