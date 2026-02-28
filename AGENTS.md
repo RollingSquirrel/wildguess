@@ -1,54 +1,41 @@
-You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
+# Agent Onboarding & Context Hub
 
-## TypeScript Best Practices
+Welcome, Agent. This project, **Wildguess**, is a high quality Planning Poker application built with a focus on modern web standards, accessibility, and high-performance real-time updates.
 
-- Use strict type checking
-- Prefer type inference when the type is obvious
-- Avoid the `any` type; use `unknown` when type is uncertain
+## Project Structure
 
-## Angular Best Practices
+The codebase is split into two main components:
 
-- Always use standalone components over NgModules
-- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v20+.
-- Use signals for state management
-- Implement lazy loading for feature routes
-- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
-- Use `NgOptimizedImage` for all static images.
-  - `NgOptimizedImage` does not work for inline base64 images.
+- **Frontend (`./wildguess`)**: An Angular SPA built with Tailwind CSS v4 and Signals.
+  - 📖 **Mandatory Rules**: [wildguess/AGENTS.md](./wildguess/AGENTS.md)
+  - 🎨 **Style System**: [docs/style-system.md](./docs/style-system.md)
+- **Backend (`./wildguess-api`)**: A Node.js API using Hono, SQLite (Drizzle ORM), and Vitest.
+  - 📖 **Mandatory Rules**: [wildguess-api/AGENTS.md](./wildguess-api/AGENTS.md)
 
-## Accessibility Requirements
+## Core Technical Principles
 
-- It MUST pass all AXE checks.
-- It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
+### 1. High Quality Aesthetics (Frontend)
 
-### Components
+Wildguess uses **Tailwind CSS v4** with a CSS-first configuration.
 
-- Keep components small and focused on a single responsibility
-- Use `input()` and `output()` functions instead of decorators
-- Use `computed()` for derived state
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
-- Prefer inline templates for small components
-- Prefer Reactive forms instead of Template-driven ones
-- Do NOT use `ngClass`, use `class` bindings instead
-- Do NOT use `ngStyle`, use `style` bindings instead
-- When using external templates/styles, use paths relative to the component TS file.
+- **Tokens**: All design tokens (colors, animations) live in [styles.css](./wildguess/src/styles.css) inside the `@theme` block.
+- **Components**: Reusable UI primitives (Buttons, Inputs, Modals) are located in `src/app/ui/`.
+- **Inline-First**: Page-specific styling should use Tailwind utility classes directly in templates. Avoid component-specific CSS files.
 
-## State Management
+### 2. High-Frequency State (Backend)
 
-- Use signals for local component state
-- Use `computed()` for derived state
-- Keep state transformations pure and predictable
-- Do NOT use `mutate` on signals, use `update` or `set` instead
+To prevent SQLite write-lock bottlenecks:
 
-## Templates
+- **Presence**: User heartbeats and high-frequency "last seen" updates are handled **in-memory** via `PresenceStore`.
 
-- Keep templates simple and avoid complex logic
-- Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-- Use the async pipe to handle observables
-- Do not assume globals like (`new Date()`) are available.
+### 3. Standards & Tools
 
-## Services
+- **Package Manager**: `pnpm`.
+- **State Management**: Angular Signals (Frontend) and Hono Context/In-memory stores (Backend).
+- **Accessibility**: Strict adherence to WCAG AA and AXE checks is required for all frontend changes.
+- **Testing**: Vitest for both frontend and backend. Backend tests use an in-memory SQLite database.
 
-- Design services around a single responsibility
-- Use the `providedIn: 'root'` option for singleton services
-- Use the `inject()` function instead of constructor injection
+## Workflow
+
+1. **Research**: Consult the sub-project `AGENTS.md` before making changes.
+2. **Verify**: Ensure all tests pass and accessibility requirements are met.
