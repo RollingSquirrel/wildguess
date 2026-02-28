@@ -120,17 +120,8 @@ Defined in `@layer components` inside `styles.css`. Use these across any page:
 | `.btn-cancel`       | Bordered cancel button          |
 | `.btn-danger-ghost` | Outlined danger button          |
 | `.card`             | General content card            |
-| `.auth-card`        | Login/register card with glow   |
 | `.modal-backdrop`   | Fixed overlay with blur         |
 | `.modal-card`       | Centered modal content          |
-| `.error-banner`     | Full error message bar          |
-| `.error-banner-sm`  | Compact error (inline forms)    |
-| `.badge-host`       | Green "HOST" label              |
-| `.badge-member`     | Blue "JOINED" label             |
-| `.badge-phase`      | Base phase badge                |
-| `.badge-voting`     | Blue voting state               |
-| `.badge-revealed`   | Green revealed state            |
-| `.badge-versus`     | Yellow versus state             |
 
 ## Style Rules for Adding New UI
 

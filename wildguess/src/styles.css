@@ -229,10 +229,6 @@ button { font-family: inherit; cursor: pointer; }
     @apply bg-bg-surface border border-border rounded-xl p-6;
   }
 
-  .auth-card {
-    @apply bg-bg-surface border border-border rounded-2xl p-10
-           animate-slide-up-entry shadow-[0_0_60px_rgba(0,230,118,0.03)];
-  }
 
   /* ---- Modals ---- */
   .modal-backdrop {

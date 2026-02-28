@@ -17,7 +17,10 @@ import { ErrorBannerComponent } from '../../ui/error-banner/error-banner';
   imports: [ReactiveFormsModule, RouterLink, ErrorBannerComponent],
   template: `
     <div class="min-h-screen flex items-center justify-center p-4">
-      <div class="auth-card w-full max-w-md" role="main">
+      <div
+        class="bg-bg-surface border border-border rounded-2xl p-10 animate-slide-up-entry shadow-[0_0_60px_rgba(0,230,118,0.03)] w-full max-w-md"
+        role="main"
+      >
         <!-- Logo / Title -->
         <div class="text-center mb-8">
           <h1 class="text-4xl font-bold tracking-tight mb-2">
