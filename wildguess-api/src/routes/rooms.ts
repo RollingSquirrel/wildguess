@@ -5,6 +5,7 @@ import { eq, and } from 'drizzle-orm';
 import { randomBytes } from 'node:crypto';
 import { authMiddleware } from '../middleware/auth.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
+import { PresenceStore } from '../utils/presence.js';
 import type { AppEnv } from '../types.js';
 
 const roomRoutes = new Hono<AppEnv>();
@@ -42,6 +43,9 @@ roomRoutes.post('/', async (c) => {
     .run();
 
   db.insert(roomMembers).values({ roomId, userId, joinedAt: now }).run();
+
+  // Track presence
+  PresenceStore.markSeen(roomId, userId);
 
   return c.json({ roomId });
 });
@@ -131,6 +135,9 @@ roomRoutes.get('/:id', async (c) => {
     .get();
 
   if (!membership) return c.json({ error: 'Not a member of this room' }, 403);
+
+  // Update last seen heartbeat
+  PresenceStore.markSeen(roomId, userId);
 
   const members = db
     .select({
@@ -263,6 +270,7 @@ roomRoutes.post('/:id/join', async (c) => {
   }
 
   db.insert(roomMembers).values({ roomId, userId, joinedAt: Date.now() }).run();
+  PresenceStore.markSeen(roomId, userId);
   return c.json({ success: true });
 });
 
@@ -281,6 +289,8 @@ roomRoutes.post('/:id/leave', async (c) => {
   db.delete(votes)
     .where(and(eq(votes.roomId, roomId), eq(votes.userId, userId)))
     .run();
+
+  PresenceStore.remove(roomId, userId);
 
   const remaining = db.select().from(roomMembers).where(eq(roomMembers.roomId, roomId)).all();
 
@@ -333,6 +343,8 @@ roomRoutes.post('/:id/kick', async (c) => {
   db.delete(votes)
     .where(and(eq(votes.roomId, roomId), eq(votes.userId, body.targetUserId)))
     .run();
+
+  PresenceStore.remove(roomId, body.targetUserId);
 
   return c.json({ success: true });
 });

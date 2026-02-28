@@ -1,8 +1,19 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, interval, switchMap, startWith } from 'rxjs';
+import { Router } from '@angular/router';
+import {
+  Observable,
+  interval,
+  switchMap,
+  startWith,
+  catchError,
+  of,
+  throwError,
+  EMPTY,
+} from 'rxjs';
 import { AuthService } from './auth.service';
 import { ConfigService } from './config.service';
+import { NotificationService } from './notification.service';
 import type { RoomSummary, RoomState, DiscoverRoom } from '../models/api.models';
 
 const API_BASE = 'api';
@@ -10,8 +21,10 @@ const API_BASE = 'api';
 @Injectable({ providedIn: 'root' })
 export class RoomService {
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
   private readonly auth = inject(AuthService);
   private readonly configService = inject(ConfigService);
+  private readonly notificationService = inject(NotificationService);
 
   private headers() {
     return { headers: this.auth.getHeaders() };
@@ -38,7 +51,23 @@ export class RoomService {
       switchMap((rate) =>
         interval(rate).pipe(
           startWith(0),
-          switchMap(() => this.getRoomState(roomId)),
+          switchMap(() =>
+            this.getRoomState(roomId).pipe(
+              catchError((err) => {
+                if (err.status === 403 || err.status === 404) {
+                  this.notificationService.show({
+                    type: 'error',
+                    message: 'You have been disconnected from the room (timed out or kicked).',
+                    actionText: 'Go to Dashboard',
+                    onAction: () => this.router.navigate(['/dashboard']),
+                  });
+                  // Throwing error here terminates the interval stream
+                  return throwError(() => err);
+                }
+                return throwError(() => err);
+              }),
+            ),
+          ),
         ),
       ),
     );
