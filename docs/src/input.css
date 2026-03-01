@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@import "../../wildguess/src/styles.css";
+
+@layer components {
+  /* Documentation specific overrides or components if needed */
+  .doc-card {
+    @apply bg-bg-surface border border-border rounded-xl p-6 transition-all;
+  }
+  .doc-card:hover {
+    @apply border-border-hover bg-bg-surface-hover shadow-lg shadow-black/20;
+  }
+  .doc-code-block {
+    @apply bg-bg-secondary border border-border rounded-lg p-4 overflow-x-auto text-sm text-text-primary font-mono relative;
+  }
+}

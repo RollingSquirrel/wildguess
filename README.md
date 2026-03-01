@@ -61,4 +61,4 @@ The Angular dev server starts on `http://localhost:4200` with proxy to the API.
 
 ## Documentation
 
-Architecture and design decisions are documented in the [docs/](docs/) directory.
+Architecture and design decisions are documented in the [documentation/](documentation/) directory.
