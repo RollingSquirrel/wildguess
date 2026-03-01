@@ -173,9 +173,9 @@
           >
         </h1>
         <p class="text-xl text-text-secondary leading-relaxed mb-10">
-          A gorgeous, real-time estimation tool for small teams. Built with an
-          Angular standalone frontend, a lightweight Hono API, and Drizzle ORM,
-          ready to deploy behind your reverse proxy.
+          Wildguess is a real-time estimation tool for teams. Built with an
+          Angular standalone frontend, a lightweight Hono API, and a local
+          SQLite database, ready to deploy behind your reverse proxy.
         </p>
         <div class="flex items-center justify-center gap-4">
           <a
@@ -326,7 +326,7 @@ volumes:
     image: <span class="token-string">rollingsquirrel/wildguess-api:latest</span>
     restart: unless-stopped
     environment:
-      - db_path=/data/sqlite.db
+      - DB_PATH=/data/sqlite.db
     volumes:
       - wildguess-data:/data
 
