@@ -1,0 +1,5 @@
+/node_modules
+/playwright-report
+
+# Keep the test results for debugging with AI agents
+# /test-results

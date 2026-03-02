@@ -1,0 +1,15 @@
+# E2E test overrides — merge with docker-compose.yml for a test-optimised stack:
+#   docker compose -f docker-compose.yml -f docker-compose.e2e.yml up --build -d
+#
+# Key changes vs. the default:
+#   - POLLING_RATE_MS=1000  (1 s instead of 3 s → tests run ~3× faster)
+#   - ROOM_TIMEOUT_MS=30000 (kept at default; must stay > POLLING_RATE_MS)
+#   - LOG_LEVEL=error       (quieter logs during test runs)
+
+services:
+  api:
+    environment:
+      - POLLING_RATE_MS=1000
+      - ROOM_TIMEOUT_MS=30000
+      - LOG_LEVEL=error
+      - ENABLE_TEST_ROUTES=true

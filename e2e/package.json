@@ -1,0 +1,19 @@
+{
+  "name": "wildguess-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test:local": "playwright test",
+    "test:local:headed": "playwright test --headed",
+    "test:docker": "cross-env E2E_APP_URL=http://localhost:8080 E2E_API_URL=http://localhost:8080 playwright test",
+    "test:docker:headed": "cross-env E2E_APP_URL=http://localhost:8080 E2E_API_URL=http://localhost:8080 playwright test --headed",
+    "docker:up": "docker compose --project-directory .. -f ../docker-compose.yml -f ../docker-compose.e2e.yml up --build -d",
+    "docker:down": "docker compose --project-directory .. -f ../docker-compose.yml -f ../docker-compose.e2e.yml down",
+    "install:browsers": "playwright install chromium --with-deps"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.51.0",
+    "@types/node": "^25.3.3",
+    "cross-env": "^7.0.3"
+  }
+}

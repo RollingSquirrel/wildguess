@@ -30,4 +30,7 @@ export class PresenceStore {
 
     return inactive;
   }
+  static clear() {
+    this.store.clear();
+  }
 }
