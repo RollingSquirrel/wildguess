@@ -1,11 +1,16 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { apiLogger } from './middleware/logger.js';
+import { errorHandler } from './middleware/error-handler.js';
 import authRoutes from './routes/auth.js';
 import roomRoutes from './routes/rooms.js';
 import voteRoutes from './routes/votes.js';
 import configRoutes from './routes/config.js';
 
 const app = new Hono();
+
+app.use('*', apiLogger());
+app.onError(errorHandler);
 
 // Configurable via environment
 const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';

@@ -33,11 +33,13 @@ COPY --from=build /app/dist ./dist
 # Copy migrations folder
 COPY drizzle/ ./drizzle
 
-# Create data directory for SQLite volume mount
-RUN mkdir -p /data && chown node:node /data
+# Create data directory for SQLite volume mount and logs directory
+RUN mkdir -p /data /data/logs && chown -R node:node /data /data/logs
 
 ENV PORT=3000
 ENV DB_PATH=/data/sqlite.db
+ENV LOG_DIR=/data/logs
+ENV LOG_FILE_ENABLED=false
 
 EXPOSE ${PORT}
 

@@ -2,13 +2,14 @@ import { db } from '../database/drizzle.config.js';
 import { rooms, roomMembers, votes } from '../database/schema.js';
 import { eq, and } from 'drizzle-orm';
 import { PresenceStore } from './presence.js';
+import { logger } from './logger.js';
 
 export function purgeTimedOutUsers(timeoutMs: number, now = Date.now()): void {
   const inactiveMembers = PresenceStore.getInactiveUsers(timeoutMs, now);
 
   if (inactiveMembers.length === 0) return;
 
-  console.log(`Purging ${inactiveMembers.length} inactive members...`);
+  logger.info(`Purging ${inactiveMembers.length} inactive members...`);
 
   for (const member of inactiveMembers) {
     db.delete(roomMembers)
@@ -31,11 +32,11 @@ export function purgeTimedOutUsers(timeoutMs: number, now = Date.now()): void {
     if (remaining.length === 0) {
       db.delete(votes).where(eq(votes.roomId, member.roomId)).run();
       db.delete(rooms).where(eq(rooms.id, member.roomId)).run();
-      console.log(`Deleted empty room ${member.roomId}`);
+      logger.info(`Deleted empty room ${member.roomId}`);
     } else if (room.hostId === member.userId) {
       const sorted = remaining.sort((a, b) => a.joinedAt - b.joinedAt);
       db.update(rooms).set({ hostId: sorted[0].userId }).where(eq(rooms.id, member.roomId)).run();
-      console.log(`Reassigned host of room ${member.roomId} to ${sorted[0].userId}`);
+      logger.info(`Reassigned host of room ${member.roomId} to ${sorted[0].userId}`);
     }
 
     PresenceStore.remove(member.roomId, member.userId);

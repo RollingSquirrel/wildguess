@@ -4,6 +4,7 @@ import { rooms, votes, roomMembers } from '../database/schema.js';
 import { eq, and } from 'drizzle-orm';
 import { randomBytes } from 'node:crypto';
 import { authMiddleware } from '../middleware/auth.js';
+import { logger } from '../utils/logger.js';
 import type { AppEnv } from '../types.js';
 
 const voteRoutes = new Hono<AppEnv>();
@@ -53,6 +54,8 @@ voteRoutes.post('/:id/vote', async (c) => {
     })
     .run();
 
+  logger.info({ roomId, userId, round: room.round, value: body.value }, 'User cast a vote');
+
   return c.json({ success: true });
 });
 
@@ -67,6 +70,7 @@ voteRoutes.post('/:id/reveal', async (c) => {
   if (room.phase !== 'voting') return c.json({ error: 'Not in voting phase' }, 400);
 
   db.update(rooms).set({ phase: 'revealed' }).where(eq(rooms.id, roomId)).run();
+  logger.info({ roomId, userId }, 'Host revealed votes');
   return c.json({ success: true });
 });
 
@@ -81,6 +85,7 @@ voteRoutes.post('/:id/versus', async (c) => {
   if (room.phase !== 'revealed') return c.json({ error: 'Not in revealed phase' }, 400);
 
   db.update(rooms).set({ phase: 'versus' }).where(eq(rooms.id, roomId)).run();
+  logger.info({ roomId, userId }, 'Host triggered versus phase');
   return c.json({ success: true });
 });
 
@@ -97,6 +102,8 @@ voteRoutes.post('/:id/next-round', async (c) => {
     .set({ phase: 'voting', round: room.round + 1, currentTopic: null })
     .where(eq(rooms.id, roomId))
     .run();
+
+  logger.info({ roomId, userId, round: room.round + 1 }, 'Host started next round');
 
   return c.json({ success: true, round: room.round + 1 });
 });
