@@ -51,81 +51,36 @@
     <link rel="canonical" href="https://rollingsquirrel.github.io/wildguess/" />
 
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <link href="./dist/output.css" rel="stylesheet" />
-    <style>
-      /* Smooth scrolling */
-      html {
-        scroll-behavior: smooth;
-      }
-
-      /* Particle canvas styling */
-      #particles {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        pointer-events: none;
-        opacity: 0.5;
-      }
-
-      /* Syntax highlighting simple overrides */
-      .token-keyword {
-        color: var(--color-primary);
-      }
-      .token-string {
-        color: var(--color-info);
-      }
-      .token-comment {
-        color: var(--color-text-muted);
-      }
-    </style>
+    <link href="./css/variables.css" rel="stylesheet" />
+    <link href="./css/base.css" rel="stylesheet" />
+    <link href="./css/layout.css" rel="stylesheet" />
+    <link href="./css/components.css" rel="stylesheet" />
+    <link href="./css/animations.css" rel="stylesheet" />
   </head>
-  <body
-    class="bg-bg-primary text-text-primary min-h-screen antialiased selection:bg-primary selection:text-bg-primary"
-  >
+  <body>
     <!-- Ambient glowing shapes -->
-    <div
-      class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary-glow blur-[120px] opacity-20 pointer-events-none"
-    ></div>
-    <div
-      class="fixed bottom-[-10%] right-[-10%] w-[30%] h-[30%] rounded-full bg-primary-glow blur-[100px] opacity-10 pointer-events-none"
-    ></div>
+    <div class="ambient-glow ambient-glow-top"></div>
+    <div class="ambient-glow ambient-glow-bottom"></div>
 
     <canvas id="particles"></canvas>
 
     <!-- Navigation -->
-    <nav
-      class="sticky top-0 z-50 bg-bg-primary/80 backdrop-blur-md border-b border-border"
-    >
-      <div
-        class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
-      >
-        <div class="flex items-center gap-3">
-          <span class="text-xl font-bold tracking-tight"
-            >Wild<span class="text-primary">guess</span></span
-          >
+    <nav class="navbar">
+      <div class="container navbar-container">
+        <div class="navbar-brand">
+          <span>Wild<span class="text-primary">guess</span></span>
         </div>
-        <div class="flex items-center gap-6">
-          <a
-            href="#quick-start"
-            class="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
-            >Quick Start</a
-          >
-          <a
-            href="#architecture"
-            class="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
-            >Architecture</a
-          >
+        <!-- Desktop Menu -->
+        <div class="desktop-menu">
+          <a href="#quick-start" class="nav-link">Quick Start</a>
+          <a href="#architecture" class="nav-link">Architecture</a>
           <a
             href="https://hub.docker.com/u/rollingsquirrel"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-sm font-medium px-4 py-2 rounded-md bg-bg-surface hover:bg-bg-surface-hover border border-border transition-colors flex items-center gap-2"
+            class="btn btn-surface"
           >
             <svg
-              class="w-4 h-4"
               viewBox="0 0 1024 1024"
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
@@ -142,14 +97,9 @@
             href="https://github.com/RollingSquirrel/wildguess"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-sm font-medium px-4 py-2 rounded-md bg-bg-surface hover:bg-bg-surface-hover border border-border transition-colors flex items-center gap-2"
+            class="btn btn-surface"
           >
-            <svg
-              class="w-4 h-4"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
+            <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path
                 fill-rule="evenodd"
                 d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
@@ -159,48 +109,112 @@
             GitHub
           </a>
         </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button
+          id="mobile-menu-toggle"
+          class="mobile-toggle"
+          aria-label="Toggle menu"
+        >
+          <svg
+            id="menu-icon"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+          <svg
+            id="close-icon"
+            class="hidden"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu Overlay -->
+      <div id="mobile-menu" class="mobile-menu hidden">
+        <div class="mobile-menu-content">
+          <a href="#quick-start" class="mobile-menu-link mobile-nav-link"
+            >Quick Start</a
+          >
+          <a href="#architecture" class="mobile-menu-link mobile-nav-link"
+            >Architecture</a
+          >
+          <div class="mobile-menu-divider"></div>
+          <div class="mobile-menu-grid">
+            <a
+              href="https://hub.docker.com/u/rollingsquirrel"
+              target="_blank"
+              class="btn-mobile-grid"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                font-size: 0.875rem;
+              "
+            >
+              Docker Hub
+            </a>
+            <a
+              href="https://github.com/RollingSquirrel/wildguess"
+              target="_blank"
+              class="btn-mobile-grid"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                font-size: 0.875rem;
+              "
+            >
+              GitHub
+            </a>
+          </div>
+        </div>
       </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+    <main class="container main-content">
       <!-- Hero Section -->
-      <div class="text-center max-w-3xl mx-auto mb-20 animate-slide-up-slow">
-        <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight mb-6">
+      <div class="hero animate-slide-up-slow">
+        <h1 class="hero-title">
           Planning Poker,<br />
-          <span
-            class="text-transparent bg-clip-text bg-linear-to-r from-primary to-info"
-            >Self-Hosted.</span
-          >
+          <span class="hero-title-highlight">Self-Hosted.</span>
         </h1>
-        <p class="text-xl text-text-secondary leading-relaxed mb-10">
+        <p class="hero-subtitle">
           Wildguess is a real-time estimation tool for teams. Built with an
           Angular standalone frontend, a lightweight Hono API, and a local
           SQLite database, ready to deploy behind your reverse proxy.
         </p>
-        <div class="flex items-center justify-center gap-4">
-          <a
-            href="#quick-start"
-            class="px-8 py-3 rounded-lg bg-primary text-bg-primary font-bold hover:bg-primary-dim transition-colors shadow-[0_0_20px_var(--color-primary-glow)]"
-          >
-            Quick Start Guide
-          </a>
-          <a
-            href="#architecture"
-            class="px-8 py-3 rounded-lg bg-bg-surface border border-border text-text-primary hover:bg-bg-surface-hover transition-colors"
-          >
+        <div class="hero-actions">
+          <a href="#quick-start" class="btn btn-primary"> Quick Start Guide </a>
+          <a href="#architecture" class="btn btn-outline">
             View Architecture
           </a>
         </div>
       </div>
 
       <!-- Quick Start Section -->
-      <section id="quick-start" class="mb-24 pt-16 -mt-16">
-        <div class="flex items-center gap-4 mb-8">
-          <div
-            class="w-10 h-10 rounded-full bg-primary-subtle border border-primary/20 flex items-center justify-center text-primary"
-          >
+      <section id="quick-start" class="section">
+        <div class="section-header">
+          <div class="section-icon">
             <svg
-              class="w-5 h-5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -214,43 +228,33 @@
               />
             </svg>
           </div>
-          <h2 class="text-3xl font-bold">Quick Start</h2>
+          <h2 class="section-title">Quick Start</h2>
         </div>
 
-        <p class="text-text-secondary mb-6 text-lg">
+        <p class="section-description">
           Deploy Wildguess instantly using our pre-built Docker containers.
           Everything is configured for a plug-and-play experience.
         </p>
 
-        <div
-          class="flex flex-col lg:flex-row justify-center gap-8 max-w-6xl mx-auto items-stretch"
-        >
+        <div class="cards-container">
           <!-- Docker Compose Root -->
-          <div class="doc-card flex-1 min-w-[280px]">
-            <h3 class="text-xl font-bold mb-2 flex items-center gap-2">
+          <div class="doc-card">
+            <h3 class="doc-card-title">
               <span>Root Deployment</span>
-              <span
-                class="text-xs bg-bg-secondary px-2 py-1 rounded border border-border text-text-muted font-normal"
-                >docker-compose.yml</span
-              >
+              <span class="doc-card-badge">docker-compose.yml</span>
             </h3>
-            <p class="text-sm text-text-secondary mb-4">
+            <p class="doc-card-desc">
               Deploying directly to a root domain or local port (e.g.
               `localhost:80`).
             </p>
 
             <div class="doc-code-block">
               <button
-                class="absolute top-3 right-3 text-text-muted hover:text-text-primary transition-colors"
+                class="copy-btn"
                 onclick="copyCode(this)"
                 title="Copy code"
               >
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -289,30 +293,22 @@ volumes:
           </div>
 
           <!-- Docker Compose Subpath -->
-          <div class="doc-card flex-1 min-w-[280px]">
-            <h3 class="text-xl font-bold mb-2 flex items-center gap-2">
+          <div class="doc-card">
+            <h3 class="doc-card-title">
               <span>Subpath Deployment</span>
-              <span
-                class="text-xs bg-bg-secondary px-2 py-1 rounded border border-border text-text-muted font-normal"
-                >docker-compose.yml</span
-              >
+              <span class="doc-card-badge">docker-compose.yml</span>
             </h3>
-            <p class="text-sm text-text-secondary mb-4">
+            <p class="doc-card-desc">
               Deploying under a specific path (e.g. `domain.com/wildguess/`).
             </p>
 
             <div class="doc-code-block">
               <button
-                class="absolute top-3 right-3 text-text-muted hover:text-text-primary transition-colors"
+                class="copy-btn"
                 onclick="copyCode(this)"
                 title="Copy code"
               >
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -347,26 +343,21 @@ volumes:
 volumes:
   wildguess-data:</code></pre>
             </div>
-            <div
-              class="mt-4 p-3 bg-info-subtle border border-info/30 rounded-lg text-sm text-text-secondary"
-            >
+            <div class="note-box">
               <strong class="text-info">Note:</strong> The
-              <code class="text-info">BASE_URL</code> environment variable tells
-              the Nginx proxy to reroute requests and the Angular app to set its
-              base href automatically.
+              <code>BASE_URL</code> environment variable tells the Nginx proxy
+              to reroute requests and the Angular app to set its base href
+              automatically.
             </div>
           </div>
         </div>
       </section>
 
       <!-- Architecture Section -->
-      <section id="architecture" class="mb-24 pt-16 -mt-16">
-        <div class="flex items-center gap-4 mb-8">
-          <div
-            class="w-10 h-10 rounded-full bg-primary-subtle border border-primary/20 flex items-center justify-center text-primary"
-          >
+      <section id="architecture" class="section">
+        <div class="section-header">
+          <div class="section-icon">
             <svg
-              class="w-5 h-5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -380,19 +371,14 @@ volumes:
               />
             </svg>
           </div>
-          <h2 class="text-3xl font-bold">Architecture</h2>
+          <h2 class="section-title">Architecture</h2>
         </div>
 
-        <div
-          class="flex flex-col md:flex-row justify-center gap-6 max-w-5xl mx-auto items-stretch flex-wrap"
-        >
+        <div class="cards-container architecture-cards">
           <!-- Nginx -->
-          <div class="doc-card flex-1 min-w-[250px] border-t-2 border-t-info">
-            <div
-              class="w-12 h-12 mb-4 rounded-xl bg-info-subtle flex items-center justify-center text-info"
-            >
+          <div class="doc-card border-top-info">
+            <div class="doc-card-icon bg-info-subtle">
               <svg
-                class="w-6 h-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -406,24 +392,23 @@ volumes:
                 ></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-text-primary mb-2">
-              Nginx Reverse Proxy
-            </h3>
-            <p class="text-text-secondary text-sm leading-relaxed">
+            <h3 class="doc-card-title">Nginx Reverse Proxy</h3>
+            <p class="doc-card-desc">
               Acts as the single entrypoint. Routes
-              <code class="text-info bg-info/10 px-1 rounded">/api</code>
+              <code
+                class="bg-info-subtle"
+                style="padding: 0.125rem 0.25rem; border-radius: 0.25rem"
+                >/api</code
+              >
               requests to the Node backend and all other requests to the Angular
               static client. Supports SSL termination.
             </p>
           </div>
 
           <!-- Client -->
-          <div class="doc-card flex-1 min-w-[250px] border-t-2 border-t-danger">
-            <div
-              class="w-12 h-12 mb-4 rounded-xl bg-danger-subtle flex items-center justify-center text-danger"
-            >
+          <div class="doc-card border-top-danger">
+            <div class="doc-card-icon bg-danger-subtle">
               <svg
-                class="w-6 h-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -437,10 +422,8 @@ volumes:
                 ></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-text-primary mb-2">
-              Angular Client
-            </h3>
-            <p class="text-text-secondary text-sm leading-relaxed">
+            <h3 class="doc-card-title">Angular Client</h3>
+            <p class="doc-card-desc">
               A modern Angular v21 application using Signals, Tailwind CSS v4,
               and dynamic CSS phase animations. Statically compiled and served
               instantly.
@@ -448,14 +431,9 @@ volumes:
           </div>
 
           <!-- API -->
-          <div
-            class="doc-card flex-1 min-w-[250px] border-t-2 border-t-primary"
-          >
-            <div
-              class="w-12 h-12 mb-4 rounded-xl bg-primary-subtle flex items-center justify-center text-primary"
-            >
+          <div class="doc-card border-top-primary">
+            <div class="doc-card-icon bg-primary-subtle">
               <svg
-                class="w-6 h-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -469,10 +447,8 @@ volumes:
                 ></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-text-primary mb-2">
-              Hono API + SQLite
-            </h3>
-            <p class="text-text-secondary text-sm leading-relaxed">
+            <h3 class="doc-card-title">Hono API + SQLite</h3>
+            <p class="doc-card-desc">
               A blazingly fast Node.js backend using Hono and Drizzle ORM.
               Stores state in a reliable SQLite database using WAL mode for high
               concurrency.
@@ -480,12 +456,12 @@ volumes:
           </div>
         </div>
 
-        <div class="mt-8 p-6 bg-bg-card rounded-xl border border-border">
-          <h4 class="font-bold mb-3 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+        <div class="feature-box">
+          <h4 class="feature-title">
+            <span class="pulse-dot animate-pulse"></span>
             No WebSockets Required
           </h4>
-          <p class="text-text-secondary text-sm text-balance">
+          <p class="feature-desc">
             By heavily relying on short-polling (default 3s), Wildguess
             dramatically simplifies frontend deployments behind arbitrary load
             balancers without requiring complex sticky session algorithms or
@@ -495,18 +471,12 @@ volumes:
       </section>
     </main>
 
-    <footer class="border-t border-border mt-20 bg-bg-primary">
-      <div
-        class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4"
-      >
-        <div class="flex items-center gap-2">
-          <span class="text-text-secondary text-sm"
-            >Wildguess Planning Poker</span
-          >
+    <footer class="footer">
+      <div class="container footer-container">
+        <div class="footer-brand">
+          <span>Wildguess Planning Poker</span>
         </div>
-        <p class="text-text-muted text-sm">
-          Built with ❤️ for better agile estimates.
-        </p>
+        <p class="footer-text">Built with ❤️ for better agile estimates.</p>
       </div>
     </footer>
 
@@ -518,7 +488,7 @@ volumes:
         navigator.clipboard.writeText(text).then(() => {
           const icon = button.innerHTML;
           button.innerHTML =
-            '<svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+            '<svg class="text-primary" style="width: 1.25rem; height: 1.25rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
           setTimeout(() => {
             button.innerHTML = icon;
           }, 2000);
@@ -566,6 +536,42 @@ volumes:
       window.addEventListener("resize", () => {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
+      });
+
+      // Mobile Menu Logic
+      const mobileToggle = document.getElementById("mobile-menu-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const menuIcon = document.getElementById("menu-icon");
+      const closeIcon = document.getElementById("close-icon");
+      const mobileLinks = document.querySelectorAll(".mobile-menu-link");
+
+      function toggleMenu() {
+        const isHidden = mobileMenu.classList.contains("hidden");
+        if (isHidden) {
+          mobileMenu.classList.remove("hidden");
+          menuIcon.classList.add("hidden");
+          closeIcon.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        } else {
+          mobileMenu.classList.add("hidden");
+          menuIcon.classList.remove("hidden");
+          closeIcon.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+      }
+
+      mobileToggle.addEventListener("click", toggleMenu);
+      mobileLinks.forEach((link) => link.addEventListener("click", toggleMenu));
+
+      // Close menu when clicking outside
+      window.addEventListener("click", (e) => {
+        if (
+          !mobileMenu.classList.contains("hidden") &&
+          !mobileMenu.contains(e.target) &&
+          !mobileToggle.contains(e.target)
+        ) {
+          toggleMenu();
+        }
       });
     </script>
   </body>
