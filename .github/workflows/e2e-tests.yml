@@ -76,13 +76,24 @@ jobs:
         working-directory: e2e
 
       - name: Run Playwright E2E tests
-        run: pnpm run test:local
+        run: pnpm test
         working-directory: e2e
         env:
           CI: true
 
-      - name: Upload Playwright report on failure
-        if: failure()
+      - name: Check for flaky tests
+        if: always()
+        run: |
+          if [ -f e2e/test-results/.last-run.json ]; then
+            STATUS=$(jq -r '.status' e2e/test-results/.last-run.json)
+            if [ "$STATUS" = "failed" ]; then
+              echo "::error::Playwright had failing tests (including flaky runs that passed on retry)"
+              exit 1
+            fi
+          fi
+
+      - name: Upload Playwright report
+        if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: playwright-report

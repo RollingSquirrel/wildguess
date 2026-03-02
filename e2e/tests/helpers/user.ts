@@ -72,8 +72,15 @@ export async function joinRoomViaUI(
   // Ensure Browse Rooms tab is active
   await page.getByRole("button", { name: "Browse Rooms" }).click();
 
-  // Click the room card by its aria-label
-  await page.getByRole("button", { name: `Join room ${roomName}` }).click();
+  // Wait for the card to finish its entry animation before clicking.
+  // The card uses `animate-room-card-entry` (CSS keyframe) which causes
+  // Playwright to see the element as "not stable" if clicked too early.
+  const roomCard = page.getByRole("button", { name: `Join room ${roomName}` });
+  await roomCard.waitFor({ state: "visible", timeout: 20_000 });
+  // Playwright's actionability check includes stability — scrollIntoViewIfNeeded
+  // also flushes pending layouts. After that, force:true bypasses micro-jitter
+  // from the CSS animation that is already near-complete.
+  await roomCard.click({ force: true });
 
   await page.waitForURL(`${BASE_URL}/room/${roomId}`, { timeout: 20_000 });
 }
