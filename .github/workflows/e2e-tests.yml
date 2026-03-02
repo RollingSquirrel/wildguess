@@ -76,7 +76,7 @@ jobs:
         working-directory: e2e
 
       - name: Run Playwright E2E tests
-        run: pnpm test
+        run: pnpm run test:local
         working-directory: e2e
         env:
           CI: true
