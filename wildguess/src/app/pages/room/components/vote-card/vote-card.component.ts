@@ -4,6 +4,10 @@ import { Component, ChangeDetectionStrategy, input, output } from '@angular/core
   selector: 'app-vote-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
+  host: {
+    '[attr.data-cy]': '"vote-card"',
+    '[attr.data-value]': 'value()',
+  },
   template: `
     <button
       (click)="clicked.emit()"

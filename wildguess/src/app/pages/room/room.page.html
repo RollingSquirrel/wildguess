@@ -13,10 +13,14 @@
           >
             {{ room.id }}
           </button>
-          <wg-badge [variant]="asBadgeVariant('phase-' + room.phase)">{{ room.phase }}</wg-badge>
+          <wg-badge data-cy="phase-badge" [variant]="asBadgeVariant('phase-' + room.phase)">{{
+            room.phase
+          }}</wg-badge>
         </div>
         <div class="flex items-center gap-3">
-          <span class="text-text-secondary text-sm">Round {{ room.round }}</span>
+          <span data-cy="round-indicator" class="text-text-secondary text-sm"
+            >Round {{ room.round }}</span
+          >
           <button
             wgButton
             variant="danger-ghost"
@@ -75,6 +79,7 @@
                 </form>
 
                 <button
+                  data-cy="reveal-btn"
                   (click)="reveal()"
                   [class]="
                     'w-full py-3 border-none rounded-[10px] font-semibold text-[0.9rem] cursor-pointer transition-all duration-300 relative overflow-hidden disabled:opacity-40 disabled:cursor-not-allowed ' +
@@ -102,6 +107,7 @@
 
               @if (phase() === 'revealed') {
                 <button
+                  data-cy="versus-btn"
                   (click)="triggerVersus()"
                   class="w-full py-3 border-none rounded-[10px] font-semibold text-[0.9rem] cursor-pointer transition-all duration-300 text-[#1a1a2e] bg-[linear-gradient(135deg,#ff6b35,#ffaa00)] hover:shadow-[0_0_30px_rgba(255,170,0,0.3)] disabled:opacity-40 disabled:cursor-not-allowed"
                   [disabled]="isUpdating()"
@@ -112,6 +118,7 @@
 
               @if (phase() === 'versus') {
                 <button
+                  data-cy="next-round-btn"
                   (click)="nextRound()"
                   class="w-full py-3 border-none rounded-[10px] font-semibold text-[0.9rem] cursor-pointer transition-all duration-300 bg-primary text-bg-primary hover:shadow-[0_0_30px_var(--color-primary-glow)] disabled:opacity-40 disabled:cursor-not-allowed"
                   [disabled]="isUpdating()"
@@ -151,6 +158,7 @@
                   <div class="flex flex-col gap-1.5 mb-5">
                     @for (member of members(); track member.userId; let i = $index) {
                       <div
+                        data-cy="result-member-row"
                         class="flex items-center gap-2.5 bg-bg-surface border border-border rounded-[10px] py-2.5 px-3.5 animate-result-slide-in"
                         [style.animation-delay.ms]="i * 80"
                       >
@@ -188,6 +196,7 @@
                   @if (stats(); as s) {
                     <div class="flex gap-2 flex-wrap">
                       <div
+                        data-cy="stats-avg"
                         class="flex-1 min-w-[70px] bg-bg-surface border border-border rounded-[10px] py-3 px-2 text-center animate-slide-up-slow [animation-fill-mode:both]"
                       >
                         <span class="block text-2xl font-extrabold text-primary leading-tight">{{
@@ -210,6 +219,7 @@
                         >
                       </div>
                       <div
+                        data-cy="stats-min"
                         class="flex-1 min-w-[70px] bg-bg-surface border-[rgba(0,230,118,0.2)] border rounded-[10px] py-3 px-2 text-center animate-slide-up-slow [animation-fill-mode:both]"
                       >
                         <span class="block text-2xl font-extrabold text-primary leading-tight">{{
@@ -221,6 +231,7 @@
                         >
                       </div>
                       <div
+                        data-cy="stats-max"
                         class="flex-1 min-w-[70px] bg-bg-surface border-[rgba(0,230,118,0.2)] border rounded-[10px] py-3 px-2 text-center animate-slide-up-slow [animation-fill-mode:both]"
                       >
                         <span class="block text-2xl font-extrabold text-primary leading-tight">{{
@@ -250,6 +261,7 @@
             <div class="animate-slide-up-slow" [class.animate-phase-enter]="phaseAnimating()">
               @if (versus(); as v) {
                 <div
+                  data-cy="versus-section"
                   class="flex items-center justify-center gap-6 py-8 flex-wrap animate-versus-enter"
                 >
                   <!-- Low voter -->
@@ -295,7 +307,7 @@
                   Time for discussion! The most extreme voters explain their reasoning.
                 </p>
               } @else {
-                <div class="text-center py-12 text-text-muted">
+                <div data-cy="consensus-msg" class="text-center py-12 text-text-muted">
                   All votes are the same — consensus reached! 🎉
                 </div>
               }
@@ -342,6 +354,7 @@
           <ul class="list-none m-0 p-0 flex flex-col gap-2">
             @for (member of members(); track member.userId) {
               <li
+                data-cy="member-item"
                 class="flex items-center justify-between p-2 rounded-lg transition-colors duration-150 hover:bg-bg-surface-hover"
               >
                 <div class="flex items-center gap-2 min-w-0">
@@ -372,6 +385,7 @@
                         class="text-[0.7rem]"
                         [class.text-text-muted]="!member.hasVoted"
                         [class.text-primary]="member.hasVoted"
+                        [attr.data-cy]="member.hasVoted ? 'member-voted' : null"
                       >
                         {{ member.hasVoted ? '✓ Voted' : 'Thinking...' }}
                       </div>
