@@ -1,8 +1,9 @@
 import { Hono } from 'hono';
 import { db } from '../database/drizzle.config.js';
 import { users, sessions } from '../database/schema.js';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { randomBytes, scryptSync } from 'node:crypto';
+import { logger } from '../utils/logger.js';
 
 const auth = new Hono();
 
@@ -22,14 +23,14 @@ function generateId(): string {
 auth.post('/register', async (c) => {
   const body = await c.req.json<{ username: string; password: string }>();
 
-  const username = body.username?.trim();
+  const displayName = body.username?.trim();
   const password = body.password;
 
-  if (!username || !password) {
+  if (!displayName || !password) {
     return c.json({ error: 'Username and password are required' }, 400);
   }
 
-  if (username.length < 3 || username.length > 20) {
+  if (displayName.length < 3 || displayName.length > 20) {
     return c.json({ error: 'Username must be between 3 and 20 characters' }, 400);
   }
 
@@ -37,9 +38,12 @@ auth.post('/register', async (c) => {
     return c.json({ error: 'Password must be at least 6 characters' }, 400);
   }
 
-  // Check if username already exists
-  // We should do a case-insensitive check but let's at least protect against exact trimmed string
-  const existing = db.select().from(users).where(eq(users.username, username)).get();
+  // Check if username already exists (case-insensitive check)
+  const existing = db
+    .select()
+    .from(users)
+    .where(sql`lower(${users.username}) = ${displayName.toLowerCase()}`)
+    .get();
 
   if (existing) {
     return c.json({ error: 'Username already taken' }, 409);
@@ -53,7 +57,7 @@ auth.post('/register', async (c) => {
   db.insert(users)
     .values({
       id: userId,
-      username: username,
+      username: displayName,
       passwordHash,
       createdAt: now,
     })
@@ -65,9 +69,11 @@ auth.post('/register', async (c) => {
 
   db.insert(sessions).values({ token, userId, expiresAt }).run();
 
+  logger.info({ userId, username: displayName }, 'User registered successfully');
+
   return c.json({
     token,
-    user: { id: userId, username: username },
+    user: { id: userId, username: displayName },
   });
 });
 
@@ -79,7 +85,12 @@ auth.post('/login', async (c) => {
     return c.json({ error: 'Username and password are required' }, 400);
   }
 
-  const user = db.select().from(users).where(eq(users.username, body.username)).get();
+  const loginInput = body.username.trim();
+  const user = db
+    .select()
+    .from(users)
+    .where(sql`lower(${users.username}) = ${loginInput.toLowerCase()}`)
+    .get();
 
   if (!user) {
     return c.json({ error: 'Invalid credentials' }, 401);
@@ -98,6 +109,8 @@ auth.post('/login', async (c) => {
 
   db.insert(sessions).values({ token, userId: user.id, expiresAt }).run();
 
+  logger.info({ userId: user.id, username: user.username }, 'User logged in successfully');
+
   return c.json({
     token,
     user: { id: user.id, username: user.username },
@@ -110,6 +123,7 @@ auth.post('/logout', async (c) => {
   if (authHeader?.startsWith('Bearer ')) {
     const token = authHeader.slice(7);
     db.delete(sessions).where(eq(sessions.token, token)).run();
+    logger.info({ tokenPrefix: token.substring(0, 8) }, 'User logged out');
   }
   return c.json({ success: true });
 });

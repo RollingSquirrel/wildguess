@@ -6,6 +6,7 @@ import { randomBytes } from 'node:crypto';
 import { authMiddleware } from '../middleware/auth.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
 import { PresenceStore } from '../utils/presence.js';
+import { logger } from '../utils/logger.js';
 import type { AppEnv } from '../types.js';
 
 const roomRoutes = new Hono<AppEnv>();
@@ -46,6 +47,8 @@ roomRoutes.post('/', async (c) => {
 
   // Track presence
   PresenceStore.markSeen(roomId, userId);
+
+  logger.info({ roomId, userId }, 'Room created');
 
   return c.json({ roomId });
 });
@@ -271,6 +274,9 @@ roomRoutes.post('/:id/join', async (c) => {
 
   db.insert(roomMembers).values({ roomId, userId, joinedAt: Date.now() }).run();
   PresenceStore.markSeen(roomId, userId);
+
+  logger.info({ roomId, userId }, 'User joined room');
+
   return c.json({ success: true });
 });
 
@@ -292,17 +298,23 @@ roomRoutes.post('/:id/leave', async (c) => {
 
   PresenceStore.remove(roomId, userId);
 
+  logger.info({ roomId, userId }, 'User left room');
+
   const remaining = db.select().from(roomMembers).where(eq(roomMembers.roomId, roomId)).all();
 
   if (remaining.length === 0) {
     db.delete(votes).where(eq(votes.roomId, roomId)).run();
     db.delete(rooms).where(eq(rooms.id, roomId)).run();
+
+    logger.info({ roomId }, 'Room deleted because it became empty');
+
     return c.json({ success: true, roomDeleted: true });
   }
 
   if (room.hostId === userId) {
     const sorted = remaining.sort((a, b) => a.joinedAt - b.joinedAt);
     db.update(rooms).set({ hostId: sorted[0].userId }).where(eq(rooms.id, roomId)).run();
+    logger.info({ roomId, newHostId: sorted[0].userId }, 'Host reassigned');
   }
 
   return c.json({ success: true });
@@ -322,6 +334,9 @@ roomRoutes.post('/:id/topic', async (c) => {
     .set({ currentTopic: body.topic ?? null })
     .where(eq(rooms.id, roomId))
     .run();
+
+  logger.info({ roomId, userId, topic: body.topic }, 'Room topic changed');
+
   return c.json({ success: true });
 });
 
@@ -345,6 +360,8 @@ roomRoutes.post('/:id/kick', async (c) => {
     .run();
 
   PresenceStore.remove(roomId, body.targetUserId);
+
+  logger.info({ roomId, targetUserId: body.targetUserId, userId }, 'Member kicked from room');
 
   return c.json({ success: true });
 });

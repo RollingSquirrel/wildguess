@@ -6,6 +6,7 @@ services:
       - PORT=3000
       - DB_PATH=/data/sqlite.db
       - CORS_ORIGIN=*
+      - LOG_DIR=/data/logs
     volumes:
       - wildguess-data:/data
 

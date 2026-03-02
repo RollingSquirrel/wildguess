@@ -2,6 +2,7 @@ import { serve } from '@hono/node-server';
 import { db } from './database/drizzle.config.js';
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
 import app from './app.js';
+import { logger } from './utils/logger.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { purgeTimedOutUsers } from './utils/room-purge.js';
@@ -15,7 +16,7 @@ const POLLING_RATE_MS = parseInt(process.env.POLLING_RATE_MS || '3000', 10);
 const ROOM_TIMEOUT_MS = parseInt(process.env.ROOM_TIMEOUT_MS || '30000', 10);
 
 if (POLLING_RATE_MS >= ROOM_TIMEOUT_MS) {
-  console.error(
+  logger.fatal(
     `Configuration Error: POLLING_RATE_MS (${POLLING_RATE_MS}ms) must be strictly less than ROOM_TIMEOUT_MS (${ROOM_TIMEOUT_MS}ms).`,
   );
   process.exit(1);
@@ -27,9 +28,9 @@ function initDb() {
     // Resolve the path to the migrations folder based on where we are executing from (dist or src)
     const migrationsFolder = path.resolve(__dirname, '../drizzle');
     migrate(db, { migrationsFolder });
-    console.log('Database initialized from migrations');
+    logger.info('Database initialized from migrations');
   } catch (error) {
-    console.error('Failed to run database migrations:', error);
+    logger.fatal({ err: error }, 'Failed to run database migrations');
     process.exit(1);
   }
 }
@@ -51,6 +52,6 @@ serve(
     port: PORT,
   },
   (info) => {
-    console.log(`Server is running on http://localhost:${info.port}`);
+    logger.info(`Server is running on http://localhost:${info.port}`);
   },
 );
