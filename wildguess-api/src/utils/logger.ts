@@ -10,7 +10,10 @@ const logLevel = process.env.LOG_LEVEL || 'info';
 const logFormat = process.env.LOG_FORMAT || 'text';
 const defaultLogDir = path.resolve(__dirname, '../../logs');
 
-export function buildTransportConfig(env: NodeJS.ProcessEnv, isTTY: boolean) {
+export function buildTransportConfig(
+  env: NodeJS.ProcessEnv,
+  isTTY: boolean,
+): pino.TransportTargetOptions[] {
   const logDir = env.LOG_DIR || defaultLogDir;
   const logFileEnabled = env.LOG_FILE_ENABLED === 'true';
 
@@ -21,7 +24,7 @@ export function buildTransportConfig(env: NodeJS.ProcessEnv, isTTY: boolean) {
   return [
     {
       target: isTTY ? 'pino-pretty' : 'pino/file',
-      options: isTTY ? { destination: 1, colorize: true } : { destination: 1 }, // 1 is stdout
+      options: isTTY ? { destination: 1, colorize: true, singleLine: true } : { destination: 1 }, // 1 is stdout
     },
     ...(logFileEnabled
       ? [
@@ -37,7 +40,7 @@ export function buildTransportConfig(env: NodeJS.ProcessEnv, isTTY: boolean) {
           },
         ]
       : []),
-  ] as any[];
+  ];
 }
 
 const isTest =
