@@ -22,7 +22,7 @@ describe('Logger Transport Configuration', () => {
 
       expect(config[0]).toEqual({
         target: 'pino-pretty',
-        options: { destination: 1, colorize: true },
+        options: { destination: 1, colorize: true, singleLine: true },
       });
     });
   });
