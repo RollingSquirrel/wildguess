@@ -66,7 +66,7 @@ describe('Logger Transport Configuration', () => {
       const customDir = '/custom/test/log/path';
       const config = buildTransportConfig({ LOG_FILE_ENABLED: 'true', LOG_DIR: customDir }, false);
 
-      expect(config[1].options.file).toBe(path.join(customDir, 'app'));
+      expect(config[1].options?.file).toBe(path.join(customDir, 'app'));
     });
   });
 });

@@ -10,7 +10,10 @@ const logLevel = process.env.LOG_LEVEL || 'info';
 const logFormat = process.env.LOG_FORMAT || 'text';
 const defaultLogDir = path.resolve(__dirname, '../../logs');
 
-export function buildTransportConfig(env: NodeJS.ProcessEnv, isTTY: boolean) {
+export function buildTransportConfig(
+  env: NodeJS.ProcessEnv,
+  isTTY: boolean,
+): pino.TransportTargetOptions[] {
   const logDir = env.LOG_DIR || defaultLogDir;
   const logFileEnabled = env.LOG_FILE_ENABLED === 'true';
 
