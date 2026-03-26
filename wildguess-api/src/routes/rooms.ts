@@ -366,4 +366,30 @@ roomRoutes.post('/:id/kick', async (c) => {
   return c.json({ success: true });
 });
 
+// POST /api/rooms/:id/host
+roomRoutes.post('/:id/host', async (c) => {
+  const userId = c.get('userId');
+  const roomId = c.req.param('id');
+
+  const room = db.select().from(rooms).where(eq(rooms.id, roomId)).get();
+  if (!room) return c.json({ error: 'Room not found' }, 404);
+  if (room.hostId !== userId) return c.json({ error: 'Only the host can transfer host' }, 403);
+
+  const body = await c.req.json<{ targetUserId: string }>();
+
+  const targetMember = db
+    .select()
+    .from(roomMembers)
+    .where(and(eq(roomMembers.roomId, roomId), eq(roomMembers.userId, body.targetUserId)))
+    .get();
+
+  if (!targetMember) return c.json({ error: 'Target user is not in the room' }, 400);
+
+  db.update(rooms).set({ hostId: body.targetUserId }).where(eq(rooms.id, roomId)).run();
+
+  logger.info({ roomId, oldHostId: userId, newHostId: body.targetUserId }, 'Host transferred');
+
+  return c.json({ success: true });
+});
+
 export default roomRoutes;

@@ -6,6 +6,7 @@ import {
   inject,
   OnInit,
   OnDestroy,
+  HostListener,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
@@ -49,6 +50,7 @@ export class RoomPage implements OnInit, OnDestroy {
   readonly phaseAnimating = signal(false);
   readonly error = signal('');
   readonly isUpdating = signal(false);
+  readonly openDropdownId = signal<string | null>(null);
 
   readonly topicForm = this.fb.nonNullable.group({
     topic: ['', Validators.required],
@@ -165,6 +167,25 @@ export class RoomPage implements OnInit, OnDestroy {
     this.roomService.kickMember(this.roomId, userId).subscribe({
       error: () => this.error.set('Failed to kick member'),
     });
+  }
+
+  transferHost(userId: string): void {
+    this.isUpdating.set(true);
+    this.roomService.transferHost(this.roomId, userId).subscribe({
+      error: () => this.error.set('Failed to transfer host'),
+    });
+  }
+
+  toggleDropdown(userId: string, event: Event): void {
+    event.stopPropagation();
+    this.openDropdownId.set(this.openDropdownId() === userId ? null : userId);
+  }
+
+  @HostListener('document:click')
+  closeDropdown(): void {
+    if (this.openDropdownId() !== null) {
+      this.openDropdownId.set(null);
+    }
   }
 
   copyRoomCode(): void {
