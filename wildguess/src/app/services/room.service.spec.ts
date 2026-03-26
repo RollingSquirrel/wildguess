@@ -94,4 +94,14 @@ describe('RoomService', () => {
       expect.any(Object),
     );
   });
+
+  it('should call transferHost correctly', () => {
+    httpMock.post.mockReturnValue(of({ success: true }));
+    service.transferHost('r1', 'u2').subscribe();
+    expect(httpMock.post).toHaveBeenCalledWith(
+      'api/rooms/r1/host',
+      { targetUserId: 'u2' },
+      expect.any(Object),
+    );
+  });
 });

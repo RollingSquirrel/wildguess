@@ -50,7 +50,7 @@
         <!-- Main area -->
         <div class="main-area">
           @if (error()) {
-            <wg-error-banner>{{ error() }}</wg-error-banner>
+            <wg-error-banner (dismiss)="error.set('')">{{ error() }}</wg-error-banner>
           }
 
           <!-- Host controls -->
@@ -355,7 +355,7 @@
             @for (member of members(); track member.userId) {
               <li
                 data-cy="member-item"
-                class="flex items-center justify-between p-2 rounded-lg transition-colors duration-150 hover:bg-bg-surface-hover"
+                class="flex items-center justify-between p-2 rounded-lg transition-colors duration-150 hover:bg-bg-surface-hover group"
               >
                 <div class="flex items-center gap-2 min-w-0">
                   <div
@@ -393,15 +393,49 @@
                   </div>
                 </div>
                 @if (isHost() && member.userId !== currentUserId()) {
-                  <button
-                    (click)="kickMember(member.userId)"
-                    class="size-6 flex items-center justify-center border-none bg-transparent text-text-muted rounded-md text-xs cursor-pointer shrink-0 transition-all duration-150 hover:bg-danger-subtle hover:text-danger"
-                    [attr.aria-label]="'Kick ' + member.username"
-                    title="Kick member"
-                    [disabled]="isUpdating()"
-                  >
-                    ✕
-                  </button>
+                  <div class="relative">
+                    <button
+                      (click)="toggleDropdown(member.userId, $event)"
+                      class="size-8 flex items-center justify-center border-none bg-transparent text-text-muted rounded-md cursor-pointer transition-colors duration-150 hover:bg-bg-surface-hover hover:text-text-primary"
+                      [attr.aria-label]="'User actions for ' + member.username"
+                      [attr.aria-expanded]="openDropdownId() === member.userId"
+                      [disabled]="isUpdating()"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle cx="8" cy="3" r="1.5" />
+                        <circle cx="8" cy="8" r="1.5" />
+                        <circle cx="8" cy="13" r="1.5" />
+                      </svg>
+                    </button>
+
+                    @if (openDropdownId() === member.userId) {
+                      <div
+                        class="absolute right-0 top-full mt-1 w-36 bg-bg-surface border border-border rounded-lg shadow-lg py-1 z-50 animate-fade-in origin-top-right"
+                        (click)="$event.stopPropagation()"
+                      >
+                        <button
+                          (click)="transferHost(member.userId); openDropdownId.set(null)"
+                          class="w-full text-left px-3 py-2 text-sm text-text-primary hover:bg-bg-surface-hover flex items-center gap-2 cursor-pointer border-none bg-transparent"
+                          [disabled]="isUpdating()"
+                        >
+                          <span>👑</span> Make Host
+                        </button>
+                        <button
+                          (click)="kickMember(member.userId); openDropdownId.set(null)"
+                          class="w-full text-left px-3 py-2 text-sm text-danger hover:bg-danger-subtle flex items-center gap-2 cursor-pointer border-none bg-transparent"
+                          [disabled]="isUpdating()"
+                        >
+                          <span>✕</span> Kick Player
+                        </button>
+                      </div>
+                    }
+                  </div>
                 }
               </li>
             }

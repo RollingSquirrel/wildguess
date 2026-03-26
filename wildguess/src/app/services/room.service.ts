@@ -153,4 +153,13 @@ export class RoomService {
       this.headers(),
     );
   }
+
+  /** Transfer host to another member (host only) */
+  transferHost(roomId: string, targetUserId: string): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(
+      `${API_BASE}/rooms/${roomId}/host`,
+      { targetUserId },
+      this.headers(),
+    );
+  }
 }

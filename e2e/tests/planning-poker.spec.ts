@@ -214,4 +214,62 @@ test.describe("Planning Poker — multi-user voting", () => {
       hostPage.locator('[data-cy="versus-section"]'),
     ).not.toBeVisible();
   });
+
+  // -------------------------------------------------------------------------
+  // Round 3 — Host Transfer Flow
+  // -------------------------------------------------------------------------
+  test("Round 3: host transfer, voting, transfer back, another round", async () => {
+    const hostPage = sessions[0].page;
+    const newHostPage = sessions[1].page;
+
+    // We are at the end of Round 2 (versus mode). Original host starts Round 3.
+    await hostPage.locator('[data-cy="next-round-btn"]').click();
+    await waitForPhase(hostPage, "voting");
+
+    // "the flow of one vote process"
+    await Promise.all(
+      sessions.map((session) =>
+        session.page.locator('[data-cy="vote-card"][data-value="3"]').click(),
+      ),
+    );
+    await waitForAllVoted(hostPage, 6);
+
+    // "and a host transfer"
+    await hostPage.getByLabel(`User actions for ${USERS[1].username}`).click();
+    await hostPage.getByRole('button', { name: '👑 Make Host' }).click();
+
+    // Now U2 is host. Wait for U2 to see the reveal button 
+    await expect(newHostPage.locator('[data-cy="reveal-btn"]')).toBeVisible({ timeout: 5000 });
+    
+    // U2 reveals votes (completing the vote process)
+    await newHostPage.locator('[data-cy="reveal-btn"]').click();
+    await waitForPhase(newHostPage, "revealed");
+
+    // U2 triggers versus and then next round 
+    await newHostPage.locator('[data-cy="versus-btn"]').click();
+    await waitForPhase(newHostPage, "versus");
+    await newHostPage.locator('[data-cy="next-round-btn"]').click();
+    await waitForPhase(newHostPage, "voting");
+
+    // "and then voting again"
+    await Promise.all(
+      sessions.map((session) =>
+        session.page.locator('[data-cy="vote-card"][data-value="8"]').click(),
+      ),
+    );
+    await waitForAllVoted(newHostPage, 6);
+
+    // "and then transferring the host back"
+    await newHostPage.getByLabel(`User actions for ${USERS[0].username}`).click();
+    await newHostPage.getByRole('button', { name: '👑 Make Host' }).click();
+    await expect(hostPage.locator('[data-cy="reveal-btn"]')).toBeVisible({ timeout: 5000 });
+
+    // "and another round" (Finish current vote process, go to next round)
+    await hostPage.locator('[data-cy="reveal-btn"]').click();
+    await waitForPhase(hostPage, "revealed");
+    await hostPage.locator('[data-cy="versus-btn"]').click();
+    await waitForPhase(hostPage, "versus");
+    await hostPage.locator('[data-cy="next-round-btn"]').click();
+    await waitForPhase(hostPage, "voting");
+  });
 });

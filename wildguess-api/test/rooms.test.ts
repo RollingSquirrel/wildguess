@@ -99,4 +99,111 @@ describe("Room Routes (/api/rooms)", () => {
       expect(data.error).toBe("Room name is required");
     });
   });
+
+  describe("POST /:id/host", () => {
+    it("should allow the host to transfer host status to another member", async () => {
+      const { token, userId } = setupMockUserAndSession();
+
+      const createRes = await app.request("/api/rooms", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name: "Host Transfer Room" }),
+      });
+      const { roomId } = (await createRes.json()) as { roomId: string };
+
+      const targetUserId = "target-user-id";
+      db.insert(users)
+        .values({
+          id: targetUserId,
+          username: "target",
+          passwordHash: "fake",
+          createdAt: Date.now(),
+        })
+        .run();
+      const targetToken = randomBytes(32).toString("base64url");
+      db.insert(sessions)
+        .values({
+          token: targetToken,
+          userId: targetUserId,
+          expiresAt: Date.now() + 1000 * 60 * 60 * 24,
+        })
+        .run();
+
+      await app.request(`/api/rooms/${roomId}/join`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${targetToken}` },
+      });
+
+      const transferRes = await app.request(`/api/rooms/${roomId}/host`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ targetUserId }),
+      });
+
+      expect(transferRes.status).toBe(200);
+
+      const updatedRoom = db
+        .select()
+        .from(rooms)
+        .where(eq(rooms.id, roomId))
+        .get();
+      expect(updatedRoom?.hostId).toBe(targetUserId);
+    });
+
+    it("should not allow non-hosts to transfer host status", async () => {
+      const { token } = setupMockUserAndSession();
+
+      const createRes = await app.request("/api/rooms", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name: "Another Room" }),
+      });
+      const { roomId } = (await createRes.json()) as { roomId: string };
+
+      const nonHostId = "non-host-id";
+      db.insert(users)
+        .values({
+          id: nonHostId,
+          username: "nonhost",
+          passwordHash: "fake",
+          createdAt: Date.now(),
+        })
+        .run();
+      const nonHostToken = randomBytes(32).toString("base64url");
+      db.insert(sessions)
+        .values({
+          token: nonHostToken,
+          userId: nonHostId,
+          expiresAt: Date.now() + 1000 * 60 * 60 * 24,
+        })
+        .run();
+
+      await app.request(`/api/rooms/${roomId}/join`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${nonHostToken}` },
+      });
+
+      const transferRes = await app.request(`/api/rooms/${roomId}/host`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${nonHostToken}`,
+        },
+        body: JSON.stringify({ targetUserId: "anyone" }),
+      });
+
+      expect(transferRes.status).toBe(403);
+      const data = (await transferRes.json()) as { error: string };
+      expect(data.error).toBe("Only the host can transfer host");
+    });
+  });
 });
